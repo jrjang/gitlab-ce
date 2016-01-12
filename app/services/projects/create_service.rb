@@ -26,7 +26,7 @@ module Projects
       elsif @project.name.present?
         # For compatibility - set path from name
         # TODO: remove this in 8.0
-        @project.path = @project.name.dup.parameterize
+        @project.path = @project.name.dup
       end
 
       # get namespace id
