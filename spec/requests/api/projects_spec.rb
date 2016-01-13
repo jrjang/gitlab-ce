@@ -169,19 +169,19 @@ describe API::API, api: true  do
       end
     end
 
-    it 'should create new project without path and return 201' do
-      expect { post api('/projects', user), name: 'foo' }.
+    it 'should create new project without name and return 201' do
+      expect { post api('/projects', user), path: 'foo' }.
         to change { Project.count }.by(1)
       expect(response.status).to eq(201)
     end
 
     it 'should create last project before reaching project limit' do
       allow_any_instance_of(User).to receive(:projects_limit_left).and_return(1)
-      post api('/projects', user2), name: 'foo'
+      post api('/projects', user2), path: 'foo'
       expect(response.status).to eq(201)
     end
 
-    it 'should not create new project without name and return 400' do
+    it 'should not create new project without path and return 400' do
       expect { post api('/projects', user) }.not_to change { Project.count }
       expect(response.status).to eq(400)
     end
