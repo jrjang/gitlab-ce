@@ -152,7 +152,6 @@ module API
       post "user/:user_id" do
         authenticated_as_admin!
         user = User.find(params[:user_id])
-        required_attributes! [:path]
         attrs = attributes_for_keys [:name,
                                      :path,
                                      :description,
