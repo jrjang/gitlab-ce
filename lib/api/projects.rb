@@ -87,7 +87,8 @@ module API
       # Create new project
       #
       # Parameters:
-      #   name (required) - name for new project
+      #   path (required)
+      #   name (optional) - name for new project
       #   description (optional) - short project description
       #   issues_enabled (optional)
       #   merge_requests_enabled (optional)
@@ -102,7 +103,7 @@ module API
       # Example Request
       #   POST /projects
       post do
-        required_attributes! [:name]
+        required_attributes! [:path]
         attrs = attributes_for_keys [:name,
                                      :path,
                                      :description,
@@ -133,7 +134,8 @@ module API
       #
       # Parameters:
       #   user_id (required) - The ID of a user
-      #   name (required) - name for new project
+      #   path (required) - path for the new project
+      #   name (optional) - name for new project
       #   description (optional) - short project description
       #   default_branch (optional) - 'master' by default
       #   issues_enabled (optional)
@@ -150,7 +152,9 @@ module API
       post "user/:user_id" do
         authenticated_as_admin!
         user = User.find(params[:user_id])
+        required_attributes! [:path]
         attrs = attributes_for_keys [:name,
+                                     :path,
                                      :description,
                                      :default_branch,
                                      :issues_enabled,
