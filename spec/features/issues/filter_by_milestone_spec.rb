@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'Issue filtering by Milestone', feature: true do
   include Select2Helper
 
-  let(:project)   { create(:project, :public) }
+  let(:project)   { create(:project, :public, path: 'foo') }
   let(:milestone) { create(:milestone, project: project) }
 
   scenario 'filters by no Milestone', js: true do

@@ -7,6 +7,7 @@ describe Issues::BulkUpdateService, services: true do
     @user = create :user
     opts = {
       name: "GitLab",
+      path: 'gitlab',
       namespace: @user.namespace
     }
     @project = Projects::CreateService.new(@user, opts).execute
