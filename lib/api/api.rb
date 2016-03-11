@@ -30,6 +30,7 @@ module API
     mount Groups
     mount GroupMembers
     mount Users
+    mount Todos
     mount Projects
     mount Repositories
     mount Issues

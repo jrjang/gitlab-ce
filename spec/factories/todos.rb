@@ -30,5 +30,9 @@ FactoryGirl.define do
     trait :mentioned do
       action { Todo::MENTIONED }
     end
+
+    trait :done do
+      state :done
+    end
   end
 end

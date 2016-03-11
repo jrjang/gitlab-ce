@@ -7,13 +7,6 @@ module TodosHelper
     current_user.todos.done.count
   end
 
-  def todo_action_name(todo)
-    case todo.action
-    when Todo::ASSIGNED then 'assigned you'
-    when Todo::MENTIONED then 'mentioned you on'
-    end
-  end
-
   def todo_target_link(todo)
     target = todo.target_type.titleize.downcase
     link_to "#{target} #{todo.target.to_reference}", todo_target_path(todo)
