@@ -15,7 +15,7 @@
 #  invite_email       :string(255)
 #  invite_token       :string(255)
 #  invite_accepted_at :datetime
-#
+#  requested          :boolean
 
 class GroupMember < Member
   SOURCE_TYPE = 'Namespace'
