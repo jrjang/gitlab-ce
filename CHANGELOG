@@ -14,6 +14,7 @@ v 8.7.0 (unreleased)
   - Implement 'TODOs View' as an option for dashboard preferences !3379 (Elias W.)
   - Gracefully handle notes on deleted commits in merge requests (Stan Hu)
   - Fall back to `In-Reply-To` and `References` headers when sub-addressing is not available (David Padilla)
+  - Allow users to create confidential issues in private projects
 
 v 8.6.2
   - Fix dropdown alignment. !3298
