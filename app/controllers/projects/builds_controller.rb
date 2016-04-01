@@ -38,6 +38,17 @@ class Projects::BuildsController < Projects::ApplicationController
     end
   end
 
+  def log
+    respond_to do |format|
+      format.text {
+        render text: @build.trace
+      }
+      format.json {
+        render json: @build.trace_for_state(params_state).merge!(id: @build.id, status: @build.status)
+      }
+    end
+  end
+
   def retry
     unless @build.retryable?
       return render_404
@@ -63,6 +74,13 @@ class Projects::BuildsController < Projects::ApplicationController
   end
 
   private
+
+  def params_state
+    begin
+      JSON.parse(params[:state], symbolize_names: true)
+    rescue
+    end
+  end
 
   def build
     @build ||= project.builds.unscoped.find_by!(id: params[:id])

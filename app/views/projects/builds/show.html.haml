@@ -86,6 +86,8 @@
           %code.bash
             = preserve do
               = raw @build.trace_html
+              - if @build.active?
+                %i{:class => "fa fa-refresh fa-spin"}
 
       %div#down-build-trace
 
@@ -213,4 +215,4 @@
 
 
   :javascript
-    new CiBuild("#{namespace_project_build_url(@project.namespace, @project, @build)}", "#{@build.status}")
+    new CiBuild("#{namespace_project_build_url(@project.namespace, @project, @build)}", "#{@build.status}", "")
