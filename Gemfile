@@ -267,16 +267,6 @@ group :development, :test do
   gem 'awesome_print', '~> 1.2.0', require: false
   gem 'fuubar', '~> 2.0.0'
 
-  gem 'database_cleaner',   '~> 1.4.0'
-  gem 'factory_girl_rails', '~> 4.6.0'
-  gem 'rspec-rails',        '~> 3.3.0'
-  gem 'rspec-retry'
-  gem 'spinach-rails',      '~> 0.2.1'
-  gem 'spinach-rerun-reporter', '~> 0.0.2'
-
-  # Prevent occasions where minitest is not bundled in packaged versions of ruby (see #3826)
-  gem 'minitest', '~> 5.7.0'
-
   # Generate Fake data
   gem 'ffaker', '~> 2.0.0'
 
@@ -304,6 +294,16 @@ group :development, :test do
 end
 
 group :test do
+  gem 'database_cleaner',   '~> 1.4.0'
+  gem 'factory_girl_rails', '~> 4.6.0'
+  gem 'rspec-rails',        '~> 3.3.0'
+  gem 'rspec-retry'
+  gem 'spinach-rails',      '~> 0.2.1'
+  gem 'spinach-rerun-reporter', '~> 0.0.2'
+
+  # Prevent occasions where minitest is not bundled in packaged versions of ruby (see #3826)
+  gem 'minitest', '~> 5.7.0'
+
   gem 'shoulda-matchers', '~> 2.8.0', require: false
   gem 'email_spec', '~> 1.6.0'
   gem 'webmock', '~> 1.21.0'
