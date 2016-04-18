@@ -5,7 +5,6 @@ class ToggleAwardEmojiService < BaseService
   # - Mark the TODO as done for this issuable (skip on snippets)
   # - Save the award emoji
   def execute(awardable, emoji)
-    byebug
     todo_service.new_award_emoji(awardable, current_user)
 
     # Needed if its posted as a note containing only :+1:

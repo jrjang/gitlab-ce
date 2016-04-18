@@ -3,6 +3,10 @@ module Awardable
 
   included do
     has_many :award_emoji, as: :awardable, dependent: :destroy
+
+    if self < Participable
+      participant :award_emoji
+    end
   end
 
   module ClassMethods
@@ -16,7 +20,7 @@ module Awardable
 
     def order_votes_desc(emoji_name)
       awardable_table = self.arel_table
-      awards_table = award_emoji.arel_table
+      awards_table = AwardEmoji.arel_table
 
       join_clause = awardable_table.join(awards_table, Arel::Nodes::OuterJoin).on(
         awards_table[:awardable_id].eq(awardable_table[:id]).and(
@@ -26,7 +30,7 @@ module Awardable
         )
       ).join_sources
 
-      joins(join_clause).group(awardable_table[:id]).reorder("COUNT(emoji_awards.id) DESC")
+      joins(join_clause).group(awardable_table[:id]).reorder("COUNT(award_emoji.id) DESC")
     end
   end
 

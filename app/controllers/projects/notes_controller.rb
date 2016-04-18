@@ -22,7 +22,6 @@ class Projects::NotesController < Projects::ApplicationController
   def create
     @note = Notes::CreateService.new(project, current_user, note_params).execute
 
-    byebug
     @note = note.is_a?(AwardEmoji) ? @note.to_note_json : note_json(@note)
 
     respond_to do |format|
