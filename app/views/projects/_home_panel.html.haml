@@ -20,7 +20,7 @@
 
   .cover-controls
     - if current_user
-      = link_to namespace_project_path(@project.namespace, @project, format: :atom, private_token: current_user.private_token), class: 'btn btn-gray' do
+      = link_to namespace_project_path(@project.namespace, @project, format: :atom, private_token: current_user.private_token), class: 'btn btn-grouped btn-gray' do
         = icon('rss')
       - access = user_max_access_in_project(current_user.id, @project)
       - can_edit = can?(current_user, :admin_project, @project)
@@ -36,13 +36,23 @@
                   Edit Project
             - if access
               %li
-                = link_to leave_namespace_project_project_members_path(@project.namespace, @project),
-                  data: { confirm: leave_project_message(@project) }, method: :delete, title: 'Leave project' do
-                  Leave Project
+                = link_to 'Leave Project',
+                          leave_namespace_project_project_members_path(@project.namespace, @project),
+                          data: { confirm: leave_project_message(@project) },
+                          method: :delete
       - else
-        = link_to request_access_namespace_project_project_members_path(@project.namespace, @project),
-          class: 'btn btn-gray', style: 'margin-left: 10px', method: :post, title: 'Request access' do
-          Request Access
+        - if @project.access_requested?(current_user)
+          = link_to 'Withdraw Request',
+                    leave_namespace_project_project_members_path(@project.namespace, @project),
+                    class: 'btn btn-grouped btn-gray',
+                    data: { confirm: withdraw_request_to_project_message(@project) },
+                    method: :delete
+        - else
+          = link_to 'Request Access',
+                    request_access_namespace_project_project_members_path(@project.namespace, @project),
+                    class: 'btn btn-grouped btn-gray',
+                    method: :post
+
 
   .project-repo-buttons
     .split-one.count-buttons

@@ -15,6 +15,7 @@
 #  invite_email       :string(255)
 #  invite_token       :string(255)
 #  invite_accepted_at :datetime
+#  requested_at       :datetime
 #
 
 require 'spec_helper'

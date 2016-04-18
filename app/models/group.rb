@@ -152,6 +152,14 @@ class Group < Namespace
     end
   end
 
+  def request_access(user)
+    group_members.create(access_level: Gitlab::Access::DEVELOPER, user_id: user.id, requested_at: Time.now)
+  end
+
+  def access_requested?(user)
+    group_members.with_user(user).request.any?
+  end
+
   def post_create_hook
     Gitlab::AppLogger.info("Group \"#{name}\" was created")
 

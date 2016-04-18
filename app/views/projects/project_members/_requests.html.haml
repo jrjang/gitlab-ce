@@ -1,0 +1,7 @@
+.panel.panel-default
+  .panel-heading
+    %strong= @project.name
+    access requests
+    %small= "(#{members.count})"
+  %ul.content-list
+    = render partial: 'project_member', collection: members, as: :member

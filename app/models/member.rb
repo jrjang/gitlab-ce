@@ -15,7 +15,8 @@
 #  invite_email       :string(255)
 #  invite_token       :string(255)
 #  invite_accepted_at :datetime
-#  requested          :boolean
+#  requested_at       :datetime
+#
 
 class Member < ActiveRecord::Base
   include Sortable
@@ -47,9 +48,9 @@ class Member < ActiveRecord::Base
 
   scope :invite, -> { where(user_id: nil) }
   scope :non_invite, -> { where('user_id IS NOT NULL') }
-  scope :request, -> { where(requested: true) }
-  scope :non_request, -> { where(requested: nil) }
-  scope :pending, -> { where("user_id IS NULL OR requested") }
+  scope :request, -> { where('requested_at IS NOT NULL') }
+  scope :non_request, -> { where(requested_at: nil) }
+  scope :pending, -> { where('user_id IS NULL OR requested_at IS NOT NULL') }
   scope :non_pending, -> { self.non_invite.non_request }
 
   scope :guests, -> { where(access_level: GUEST) }
@@ -61,13 +62,10 @@ class Member < ActiveRecord::Base
   before_validation :generate_invite_token, on: :create, if: -> (member) { member.invite_email.present? }
 
   after_create :send_invite, if: :invite?
-  after_create :send_request_access, if: :request?
-
+  after_create :send_request, if: :request?
   after_create :create_notification_setting, unless: :pending?
   after_create :post_create_hook, unless: :pending?
-
   after_update :post_update_hook, unless: :pending?
-
   after_destroy :post_destroy_hook, unless: :pending?
 
   delegate :name, :username, :email, to: :user, prefix: true
@@ -130,20 +128,21 @@ class Member < ActiveRecord::Base
   end
 
   def request?
-    self.requested
+    requested_at.present?
   end
 
   def invite?
     self.invite_token.present?
   end
 
-  def accept_request_access!
+  def accept_request!
     return false unless request?
 
-    self.request = false
+    self.requested_at = nil
+
     saved = self.save
 
-    after_accept_request_access if saved
+    after_accept_request if saved
 
     saved
   end
@@ -152,7 +151,7 @@ class Member < ActiveRecord::Base
     return false unless request?
 
     destroyed = self.destroy
-    after_decline_request_access if destroyed
+    after_decline_request if destroyed
 
     destroyed
   end
@@ -210,11 +209,11 @@ class Member < ActiveRecord::Base
 
   private
 
-  def send_request_access
+  def send_invite
     # override in subclass
   end
 
-  def send_invite
+  def send_request
     # override in subclass
   end
 
@@ -230,19 +229,19 @@ class Member < ActiveRecord::Base
     system_hook_service.execute_hooks_for(self, :destroy)
   end
 
-  def after_accept_request_access
-    post_create_hook
-  end
-
-  def after_decline_request_access
-    # override in subclass
-  end
-
   def after_accept_invite
     post_create_hook
   end
 
   def after_decline_invite
+    # override in subclass
+  end
+
+  def after_accept_request
+    post_create_hook
+  end
+
+  def after_decline_request
     # override in subclass
   end
 

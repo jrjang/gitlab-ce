@@ -15,7 +15,8 @@
 #  invite_email       :string(255)
 #  invite_token       :string(255)
 #  invite_accepted_at :datetime
-#  requested          :boolean
+#  requested_at       :datetime
+#
 
 class GroupMember < Member
   SOURCE_TYPE = 'Namespace'
@@ -50,6 +51,12 @@ class GroupMember < Member
     super
   end
 
+  def send_request
+    notification_service.new_group_member_request(self)
+
+    super
+  end
+
   def post_create_hook
     notification_service.new_group_member(self)
 
@@ -72,6 +79,18 @@ class GroupMember < Member
 
   def after_decline_invite
     notification_service.decline_group_invite(self)
+
+    super
+  end
+
+  def after_accept_request
+    notification_service.accept_group_member_request(self)
+
+    super
+  end
+
+  def after_decline_request
+    notification_service.decline_group_member_request(self)
 
     super
   end

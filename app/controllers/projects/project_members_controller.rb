@@ -3,28 +3,10 @@ class Projects::ProjectMembersController < Projects::ApplicationController
   before_action :authorize_admin_project_member!, except: [:leave, :request_access]
 
   def index
-    @project_members = @project.project_members
-    @project_members = @project_members.non_pending unless can?(current_user, :admin_project, @project)
-
-    if params[:search].present?
-      users = @project.users.search(params[:search]).to_a
-      @project_members = @project_members.where(user_id: users)
-    end
-
-    @project_members = @project_members.order('access_level DESC')
+    find_project_members
 
     @group = @project.group
-    if @group
-      @group_members = @group.group_members
-      @group_members = @group_members.non_invite unless can?(current_user, :admin_group, @group)
-
-      if params[:search].present?
-        users = @group.users.search(params[:search]).to_a
-        @group_members = @group_members.where(user_id: users)
-      end
-
-      @group_members = @group_members.order('access_level DESC')
-    end
+    find_group_members
 
     @project_member = @project.project_members.new
     @project_group_links = @project.project_group_links
@@ -77,10 +59,11 @@ class Projects::ProjectMembersController < Projects::ApplicationController
     @project_member = @project.project_members.find_by(user_id: current_user)
 
     if can?(current_user, :destroy_project_member, @project_member)
+      notice = @project_member.request? ? 'You withdrawn your access request to the project.' : 'You left the project.'
       @project_member.destroy
 
       respond_to do |format|
-        format.html { redirect_to dashboard_projects_path, notice: "You left the project." }
+        format.html { redirect_to dashboard_projects_path, notice: notice }
         format.js { render nothing: true }
       end
     else
@@ -94,22 +77,17 @@ class Projects::ProjectMembersController < Projects::ApplicationController
   end
 
   def request_access
-    redirect_path = namespace_project_path(@project.namespace, @project)
-    # current_user
-    # @project
-    @project_member = ProjectMember.new(source: @project, access_level: ProjectMember::DEVELOPER, user_id: current_user.id, created_by_id: current_user.id, requested: true)
-    @project_member.save!
+    @project.request_access(current_user)
 
-
-    redirect_to redirect_path, notice: 'Your request for access has been queued for review.'
+    redirect_to namespace_project_path(@project.namespace, @project), notice: 'Your request for access has been queued for review.'
   end
 
-  def approval
+  def approve
     @project_member = @project.project_members.find(params[:id])
 
     return render_403 unless can?(current_user, :update_project_member, @project_member)
 
-    @project_member.requested = nil
+    @project_member.requested_at = nil
     @project_member.save!
 
     respond_to do |format|
@@ -135,6 +113,32 @@ class Projects::ProjectMembersController < Projects::ApplicationController
   end
 
   protected
+
+  def find_project_members
+    @project_members = @project.project_members
+    @project_members = @project_members.non_pending unless can?(current_user, :admin_project, @project)
+
+    if params[:search].present?
+      users = @project.users.search(params[:search]).to_a
+      @project_members = @project_members.where(user_id: users)
+    end
+
+    @project_members = @project_members.order(access_level: :desc)
+  end
+
+  def find_group_members
+    return unless @group
+
+    @group_members = @group.group_members
+    @group_members = @group_members.non_invite unless can?(current_user, :admin_group, @group)
+
+    if params[:search].present?
+      users = @group.users.search(params[:search]).to_a
+      @group_members = @group_members.where(user_id: users)
+    end
+
+    @group_members = @group_members.order(access_level: :desc)
+  end
 
   def member_params
     params.require(:project_member).permit(:user_id, :access_level)

@@ -1,12 +1,16 @@
 module ProjectsHelper
   def remove_from_project_team_message(project, member)
-    if !member.user
-      "You are going to revoke the invitation for #{member.invite_email} to join #{project.name} project team. Are you sure?"
-    elsif member.request?
+    if member.request?
       "You are going to deny #{member.user.name}'s request to join #{project.name} project team. Are you sure?"
+    elsif member.invite?
+      "You are going to revoke the invitation for #{member.invite_email} to join #{project.name} project team. Are you sure?"
     else
       "You are going to remove #{member.user.name} from #{project.name} project team. Are you sure?"
     end
+  end
+
+  def remove_from_project_team_title(member)
+    member.request? ? 'Deny access request' : 'Remove user from team'
   end
 
   def approve_for_project_team_message(project, member)
@@ -303,6 +307,10 @@ module ProjectsHelper
 
   def leave_project_message(project)
     "Are you sure you want to leave \"#{project.name}\" project?"
+  end
+
+  def withdraw_request_to_project_message(project)
+    "Are you sure you want to withdraw your access request for the \"#{project.name}\" project?"
   end
 
   def new_readme_path

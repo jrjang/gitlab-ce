@@ -15,7 +15,8 @@
 #  invite_email       :string(255)
 #  invite_token       :string(255)
 #  invite_accepted_at :datetime
-#  requested          :boolean
+#  requested_at       :datetime
+#
 
 class ProjectMember < Member
   SOURCE_TYPE = 'Project'
@@ -121,14 +122,14 @@ class ProjectMember < Member
 
   private
 
-  def send_request_access
-    notification_service.request_access_project_member(self)
+  def send_invite
+    notification_service.invite_project_member(self, @raw_invite_token)
 
     super
   end
 
-  def send_invite
-    notification_service.invite_project_member(self, @raw_invite_token)
+  def send_request
+    notification_service.new_project_member_request(self)
 
     super
   end
@@ -156,18 +157,6 @@ class ProjectMember < Member
     super
   end
 
-  def after_accept_request_access
-    notification_service.accept_project_request_access(self)
-
-    super
-  end
-
-  def after_decline_request_access
-    notification_service.decline_project_request_access(self)
-
-    super
-  end
-
   def after_accept_invite
     notification_service.accept_project_invite(self)
 
@@ -176,6 +165,18 @@ class ProjectMember < Member
 
   def after_decline_invite
     notification_service.decline_project_invite(self)
+
+    super
+  end
+
+  def after_accept_request
+    notification_service.accept_project_member_request(self)
+
+    super
+  end
+
+  def after_decline_request
+    notification_service.decline_project_member_request(self)
 
     super
   end

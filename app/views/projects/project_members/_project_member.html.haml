@@ -3,7 +3,7 @@
 
 %li{class: "#{dom_class(member)} js-toggle-container project_member_row access-#{member.human_access.downcase}", id: dom_id(member)}
   %span.list-item-name
-    - if member.user
+    - if user
       = image_tag avatar_icon(user, 24), class: "avatar s24", alt: ''
       %strong
         = link_to user.name, user_path(user)
@@ -14,8 +14,9 @@
         %label.label.label-danger
           %strong Blocked
       - if member.request?
-        %span.label.label-info
-          Pending Approval
+        %small
+          – Requested
+          = time_ago_with_tooltip(member.requested_at)
     - else
       = image_tag avatar_icon(member.invite_email, 24), class: "avatar s24", alt: ''
       %strong
@@ -37,24 +38,23 @@
         = button_tag class: "btn-xs btn js-toggle-button",
                      title: 'Edit access level', type: 'button' do
           %i.fa.fa-pencil-square-o
+
         - if member.request?
           &nbsp;
-          = link_to approval_namespace_project_project_member_path(@project.namespace, @project, member),
-                       class: "btn-xs btn btn-success",
-                       title: 'Grant access', type: 'button' do
+          = link_to approve_namespace_project_project_member_path(@project.namespace, @project, member),
+                    method: :post,
+                    class: 'btn-xs btn btn-success',
+                    title: 'Grant access', type: 'button' do
             %i.fa.fa-check.fa-inverse
 
       - if can?(current_user, :destroy_project_member, member)
         &nbsp;
-        - if member.request?
-          = link_to namespace_project_project_member_path(@project.namespace, @project, member), data: { confirm: remove_from_project_team_message(@project, member) }, method: :delete, class: "btn-xs btn btn-remove", title: 'Deny access' do
-            %i.fa.fa-times.fa-inverse
-        - elsif current_user == user
+        - if current_user == user
           = link_to leave_namespace_project_project_members_path(@project.namespace, @project), data: { confirm: leave_project_message(@project) }, method: :delete, class: "btn-xs btn btn-remove", title: 'Leave project' do
             = icon("sign-out")
             Leave
         - else
-          = link_to namespace_project_project_member_path(@project.namespace, @project, member), data: { confirm: remove_from_project_team_message(@project, member) }, method: :delete, remote: true, class: "btn-xs btn btn-remove", title: 'Remove user from team' do
+          = link_to namespace_project_project_member_path(@project.namespace, @project, member), data: { confirm: remove_from_project_team_message(@project, member) }, method: :delete, remote: true, class: "btn-xs btn btn-remove", title: remove_from_project_team_title(member) do
             %i.fa.fa-minus.fa-inverse
 
     .edit-member.hide.js-toggle-content

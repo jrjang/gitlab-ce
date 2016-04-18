@@ -11,7 +11,7 @@ module Emails
            subject: subject("Access to project was granted"))
     end
 
-    def project_member_requested_access(project_member_id)
+    def project_access_requested_email(project_member_id)
       @project_member = ProjectMember.find project_member_id
       @project = @project_member.project
       @target_url = namespace_project_url(@project.namespace, @project)
@@ -26,19 +26,6 @@ module Emails
       end
     end
 
-    def project_request_access_accepted_email(project_member_id)
-      @project_member = ProjectMember.find project_member_id
-      return if @project_member.created_by.nil?
-
-      @project = @project_member.project
-
-      @target_url = namespace_project_url(@project.namespace, @project)
-      @current_user = @project_member.created_by
-
-      mail(to: @project_member.created_by.notification_email,
-           subject: subject('Request for access granted'))
-    end
-
     def project_request_access_declined_email(project_member_id)
       @project_member = ProjectMember.find project_member_id
       return if @project_member.created_by.nil?
@@ -51,7 +38,6 @@ module Emails
       mail(to: @project_member.created_by.notification_email,
            subject: subject('Request for access declined'))
     end
-
 
     def project_member_invited_email(project_member_id, token)
       @project_member = ProjectMember.find project_member_id

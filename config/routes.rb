@@ -724,7 +724,7 @@ Rails.application.routes.draw do
 
           member do
             post :resend_invite
-            post :approval
+            post :approve
           end
         end
 

@@ -10,8 +10,10 @@
           = icon('pencil-square-o')
           Manage group members
   %ul.content-list
-    - members.limit(20).each do |member|
-      = render 'groups/group_members/group_member', member: member, show_controls: false
+    = render partial: 'groups/group_members/group_member',
+             collection: members.limit(20),
+             as: :member,
+             locals: { show_controls: false }
     - if members.count > 20
       %li
         and #{members.count - 20} more. For full list visit #{link_to 'group members page', group_group_members_path(@group)}

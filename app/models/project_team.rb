@@ -61,13 +61,10 @@ class ProjectTeam
     ProjectMember.truncate_team(project)
   end
 
-  def users
-    members
-  end
-
   def members
     @members ||= fetch_members
   end
+  alias_method :users, :members
 
   def guests
     @guests ||= fetch_members(:guests)
@@ -116,9 +113,7 @@ class ProjectTeam
   end
 
   def pending?(user)
-    project.project_members.each do |member|
-      return member.pending? if member.user_id == user.id
-    end
+    project.project_members.with_user(user).pending.any?
   end
 
   def guest?(user)
@@ -150,7 +145,7 @@ class ProjectTeam
   def max_member_access(user_id)
     access = []
 
-    project.project_members.each do |member|
+    project.project_members.non_pending.each do |member|
       if member.user_id == user_id
         access << member.access_field if member.access_field
         break
@@ -158,7 +153,7 @@ class ProjectTeam
     end
 
     if group
-      group.group_members.each do |member|
+      group.group_members.non_pending.each do |member|
         if member.user_id == user_id
           access << member.access_field if member.access_field
           break

@@ -1028,6 +1028,14 @@ class Project < ActiveRecord::Base
     ensure_runners_token!
   end
 
+  def request_access(user)
+    project_members.create(access_level: Gitlab::Access::DEVELOPER, user_id: user.id, requested_at: Time.now)
+  end
+
+  def access_requested?(user)
+    project_members.with_user(user).request.any?
+  end
+
   def wiki
     @wiki ||= ProjectWiki.new(self, self.owner)
   end

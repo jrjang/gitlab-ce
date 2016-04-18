@@ -67,7 +67,7 @@ describe ProjectTeam, models: true do
     end
   end
 
-  describe :max_invited_level do
+  describe '#max_invited_level' do
     let(:group) { create(:group) }
     let(:project) { create(:empty_project) }
 
@@ -86,7 +86,7 @@ describe ProjectTeam, models: true do
     it { expect(project.team.max_invited_level(nonmember.id)).to be_nil }
   end
 
-  describe :max_member_access do
+  describe '#max_member_access' do
     let(:group) { create(:group) }
     let(:project) { create(:empty_project) }
 
@@ -108,6 +108,15 @@ describe ProjectTeam, models: true do
       project.namespace.update(share_with_group_lock: true)
       expect(project.team.max_member_access(master.id)).to be_nil
       expect(project.team.max_member_access(reporter.id)).to be_nil
+    end
+
+    context 'user request access' do
+      it 'does not have access to the project' do
+        requester = build_stubbed(:user)
+        project.request_access(requester)
+
+        expect(project.team.max_member_access(requester.id)).to be_nil
+      end
     end
   end
 
