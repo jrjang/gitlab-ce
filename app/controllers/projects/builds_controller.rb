@@ -40,12 +40,12 @@ class Projects::BuildsController < Projects::ApplicationController
 
   def log
     respond_to do |format|
-      format.text {
+      format.text do
         render text: @build.trace
-      }
-      format.json {
+      end
+      format.json do
         render json: @build.trace_for_state(params_state).merge!(id: @build.id, status: @build.status)
-      }
+      end
     end
   end
 

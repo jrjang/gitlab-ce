@@ -143,7 +143,7 @@ module Ci
 
     def trace_for_state(state = nil)
       trace_for_state = Ci::Ansi2html::convert(trace, state) if trace.present?
-      trace_for_state || {html: '', append: false}
+      trace_for_state || { html: '', append: false }
     end
 
     def timeout
