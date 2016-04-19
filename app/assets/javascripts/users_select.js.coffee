@@ -127,6 +127,12 @@ class @UsersSelect
             if showDivider
               users.splice(showDivider, 0, "divider")
 
+            if users.length is 0 and term.length isnt 0
+              users.push(
+                id: term
+                name: "Filter by <strong>#{term}</strong>"
+              )
+
             # Send the data back
             callback users
         filterable: true

@@ -323,6 +323,10 @@ class User < ActiveRecord::Base
       find_by!('lower(username) = ?', username.downcase)
     end
 
+    def by_username_or_name_or_id(filter)
+      find_by('users.id = ? OR users.username = ? OR users.name = ?', filter.to_i, filter, filter)
+    end
+
     def by_username_or_id(name_or_id)
       find_by('users.username = ? OR users.id = ?', name_or_id.to_s, name_or_id.to_i)
     end
