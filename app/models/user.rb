@@ -324,7 +324,14 @@ class User < ActiveRecord::Base
     end
 
     def by_username_or_name_or_id(filter)
-      find_by('users.id = ? OR users.username = ? OR users.name = ?', filter.to_i, filter, filter)
+      table   = arel_table
+      pattern = "%#{filter}%"
+
+      where(
+        table[:name].matches(pattern).
+          or(table[:username].matches(pattern)).
+          or(table[:id].eq(filter))
+      )
     end
 
     def by_username_or_id(name_or_id)

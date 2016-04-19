@@ -127,10 +127,11 @@ class @UsersSelect
             if showDivider
               users.splice(showDivider, 0, "divider")
 
-            if users.length is 0 and term.length isnt 0
+            if users.length is 0 and term.length isnt 0 and $dropdown.hasClass('js-filter-submit js-author-search')
               users.push(
-                id: term
-                name: "Filter by <strong>#{term}</strong>"
+                id: term.trim()
+                text: term.trim()
+                name: "Filter by author:<strong>#{term.trim()}</strong>"
               )
 
             # Send the data back
@@ -144,7 +145,7 @@ class @UsersSelect
 
         toggleLabel: (selected) ->
           if selected && 'id' of selected
-            selected.name
+            if selected.text then selected.text else selected.name
           else
             defaultLabel
 

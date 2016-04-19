@@ -261,7 +261,7 @@ module ApplicationHelper
       scope: params[:scope],
       milestone_title: params[:milestone_title],
       assignee_id: params[:assignee_id],
-      author_id: params[:author_id],
+      author: params[:author],
       sort: params[:sort],
     }
 
