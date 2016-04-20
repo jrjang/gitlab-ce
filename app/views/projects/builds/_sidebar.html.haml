@@ -1,0 +1,81 @@
+%aside.right-sidebar.build-sidebar{ class: sidebar_gutter_collapsed_class }
+  - if @build.coverage
+    .block.block-first
+      .title
+        Test coverage
+      %h1 #{@build.coverage}%
+
+  - if can?(current_user, :read_build, @project) && @build.artifacts?
+    .block{ class: ("block-first" if !@build.coverage) }
+      .title
+        Build artifacts
+      .btn-group.btn-group-justified{ role: :group }
+        = link_to download_namespace_project_build_artifacts_path(@project.namespace, @project, @build), class: 'btn btn-sm btn-default' do
+          Download
+
+        - if @build.artifacts_metadata?
+          = link_to browse_namespace_project_build_artifacts_path(@project.namespace, @project, @build), class: 'btn btn-sm btn-default' do
+            Browse
+
+  .block{ class: ("block-first" if !@build.coverage && !(can?(current_user, :read_build, @project) && @build.artifacts?)) }
+    .title
+      Build details
+      - if @build.active?
+        = link_to "Cancel", cancel_namespace_project_build_path(@project.namespace, @project, @build), class: 'pull-right', method: :post
+      - elsif @build.retryable?
+        = link_to "Retry", retry_namespace_project_build_path(@project.namespace, @project, @build), class: 'pull-right', method: :post
+    - if @build.duration
+      %p.build-detail-row
+        %span.build-light-text Duration:
+        #{duration_in_words(@build.finished_at, @build.started_at)}
+    - if @build.finished_at
+      %p.build-detail-row
+        %span.build-light-text Finished:
+        #{time_ago_with_tooltip(@build.finished_at)}
+    - if @build.erased_at
+      %p.build-detail-row
+        %span.build-light-text Erased:
+        #{time_ago_with_tooltip(@build.erased_at)}
+    %p.build-detail-row
+      %span.build-light-text Runner:
+      - if @build.runner && current_user && current_user.admin
+        = link_to "##{@build.runner.id}", admin_runner_path(@build.runner.id)
+      - elsif @build.runner
+        \##{@build.runner.id}
+    - if can?(current_user, :update_build, @project) && @build.erasable?
+      .btn-group.btn-group-justified{ role: :group }
+        = link_to erase_namespace_project_build_path(@project.namespace, @project, @build),
+                  class: 'btn btn-sm btn-default', method: :post,
+                  data: { confirm: 'Are you sure you want to erase this build?' } do
+          Erase
+
+  - if @build.trigger_request
+    .build-widget
+      %h4.title
+        Trigger
+
+      %p
+        %span.build-light-text Token:
+        #{@build.trigger_request.trigger.short_token}
+
+      - if @build.trigger_request.variables
+        %p
+          %span.build-light-text Variables:
+
+        %code
+          - @build.trigger_request.variables.each do |key, value|
+            #{key}=#{value}
+
+  .block
+    .title
+      Commit message
+    %p.build-light-text.append-bottom-0
+      #{@build.commit.git_commit_message}
+
+  - if @build.tags.any?
+    .build-widget
+      %h4.title
+        Tags
+      - @build.tag_list.each do |tag|
+        %span.label.label-primary
+          = tag

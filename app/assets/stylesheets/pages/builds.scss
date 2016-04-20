@@ -59,22 +59,6 @@
     }
   }
 
-  .build-widget {
-    padding: 10px;
-    background: $background-color;
-    margin-bottom: 20px;
-    border-radius: 4px;
-
-    .title {
-      margin-top: 0;
-      color: #666;
-      line-height: 1.5;
-    }
-    .attr-name {
-      color: #777;
-    }
-  }
-
   .alert-disabled {
     background: $background-color;
 
@@ -82,4 +66,17 @@
       color: #3084bb !important;
     }
   }
+}
+
+.right-sidebar.build-sidebar {
+  padding-top: $gl-padding;
+  padding-bottom: $gl-padding;
+}
+
+.build-detail-row {
+  margin-bottom: 5px;
+}
+
+.build-light-text {
+  color: $gl-placeholder-color;
 }
