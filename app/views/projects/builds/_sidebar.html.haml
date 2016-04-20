@@ -73,8 +73,8 @@
       #{@build.commit.git_commit_message}
 
   - if @build.tags.any?
-    .build-widget
-      %h4.title
+    .block
+      .title
         Tags
       - @build.tag_list.each do |tag|
         %span.label.label-primary

@@ -1,11 +1,13 @@
-.content-block
+.content-block.build-header
   = ci_status_with_icon(@build.status)
   Build
   %strong ##{@build.id}
   for commit
   %strong= link_to @build.commit.short_sha, ci_status_path(@build.commit)
   from
-  = link_to @build.ref, namespace_project_commits_path(@project.namespace, @project, @build.ref)
+  = link_to namespace_project_commits_path(@project.namespace, @project, @build.ref) do
+    %code
+      = @build.ref
   - merge_request = @build.merge_request
   - if merge_request
     via

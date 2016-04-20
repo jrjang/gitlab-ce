@@ -60,10 +60,8 @@
         - erased_by = "by #{link_to @build.erased_by.name, user_path(@build.erased_by)}" if @build.erased_by
         Build has been erased #{erased_by.html_safe} #{time_ago_with_tooltip(@build.erased_at)}
     - else
-      %pre.trace#build-trace
+      %pre.build-trace#build-trace
         %code.bash
-          = preserve do
-            = raw @build.trace_html
 
     #down-build-trace
 

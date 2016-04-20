@@ -1,24 +1,4 @@
 .build-page {
-  pre.trace {
-    background: #111;
-    color: #fff;
-    font-family: $monospace_font;
-    white-space: pre;
-    white-space: pre-wrap;       /* css-3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
-    overflow: auto;
-    overflow-y: hidden;
-    font-size: 12px;
-
-    .fa-refresh {
-      font-size: 24px;
-      margin-left: 20px;
-    }
-  }
-
   .autoscroll-container {
     position: fixed;
     bottom: 20px;
@@ -58,14 +38,43 @@
       left: 70px;
     }
   }
+}
 
-  .alert-disabled {
-    background: $background-color;
-
-    a {
-      color: #3084bb !important;
-    }
+.build-header {
+  a {
+    color: $gl-gray;
   }
+
+  code {
+    color: $code-color;
+  }
+}
+
+.build-trace {
+  background: $ci-output-bg;
+  color: $ci-text-color;
+  white-space: pre;
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  overflow: auto;
+  overflow-y: hidden;
+  font-size: 12px;
+
+  .fa-refresh {
+    font-size: 24px;
+  }
+
+  .bash {
+    display: block;
+  }
+}
+
+.build-trace-line {
+  display: block;
+  margin-bottom: 3px;
 }
 
 .right-sidebar.build-sidebar {

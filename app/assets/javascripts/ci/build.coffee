@@ -1,11 +1,12 @@
 class CiBuild
   @interval: null
 
-  constructor: (build_url, build_status) ->
+  constructor: (@build_url, build_status) ->
     clearInterval(CiBuild.interval)
 
     $('.right-sidebar').niceScroll()
 
+    @getBuildTrace()
     @initScrollButtonAffix()
 
     if build_status == "running" || build_status == "pending"
@@ -26,18 +27,24 @@ class CiBuild
       # Only valid for runnig build when output changes during time
       #
       CiBuild.interval = setInterval =>
-        if window.location.href.split("#").first() is build_url
-          $.ajax
-            url: build_url
-            dataType: "json"
-            success: (build) =>
-              if build.status == "running"
-                $('#build-trace code').html build.trace_html
-                $('#build-trace code').append '<i class="fa fa-refresh fa-spin"/>'
-                @checkAutoscroll()
-              else if build.status != build_status
-                Turbolinks.visit build_url
+        if window.location.href.split("#").first() is @build_url
+          @getBuildTrace()
       , 4000
+
+  getBuildTrace: ->
+    $.ajax
+      url: @build_url
+      dataType: "json"
+      beforeSend: ->
+        if $('.js-build-loading').length is 0
+          $('#build-trace code').append '<i class="fa fa-refresh fa-spin js-build-loading"/>'
+      success: (build) =>
+        $('#build-trace code').prepend build.trace_html
+
+        if build.status == "running"
+          @checkAutoscroll()
+        else
+          $('.js-build-loading').remove()
 
   checkAutoscroll: ->
     $("html,body").scrollTop $("#build-trace").height()  if "enabled" is $("#autoscroll-button").data("state")

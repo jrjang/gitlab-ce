@@ -121,7 +121,7 @@ module Ci
 
         evaluate_command_stack(commands)
 
-        css_classes = []
+        css_classes = ["build-trace-line"]
 
         unless @fg_color.nil?
           fg_color = @fg_color
