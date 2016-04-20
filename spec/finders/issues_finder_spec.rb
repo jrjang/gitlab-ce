@@ -39,7 +39,7 @@ describe IssuesFinder do
       end
 
       it 'should filter by author id' do
-        params = { scope: "all", author_id: user2.id, state: 'opened' }
+        params = { scope: "all", author: user2.id, state: 'opened' }
         issues = IssuesFinder.new(user, params).execute
         expect(issues).to eq([issue3])
       end
