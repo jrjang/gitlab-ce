@@ -37,9 +37,9 @@ class CiBuild
       dataType: "json"
       beforeSend: ->
         if $('.js-build-loading').length is 0
-          $('#build-trace code').append '<i class="fa fa-refresh fa-spin js-build-loading"/>'
+          $('#build-trace').append '<i class="fa fa-refresh fa-spin js-build-loading"/>'
       success: (build) =>
-        $('#build-trace code').prepend build.trace_html
+        $('#build-trace .bash').html build.trace_html
 
         if build.status == "running"
           @checkAutoscroll()
