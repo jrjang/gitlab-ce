@@ -3,7 +3,8 @@
     .block.block-first
       .title
         Test coverage
-      %h1 #{@build.coverage}%
+      %p.build-detail-row
+        #{@build.coverage}%
 
   - if can?(current_user, :read_build, @project) && @build.artifacts?
     .block{ class: ("block-first" if !@build.coverage) }
@@ -24,6 +25,10 @@
         = link_to "Cancel", cancel_namespace_project_build_path(@project.namespace, @project, @build), class: 'pull-right', method: :post
       - elsif @build.retryable?
         = link_to "Retry", retry_namespace_project_build_path(@project.namespace, @project, @build), class: 'pull-right', method: :post
+    - if @build.merge_request
+      %p.build-detail-row
+        %span.build-light-text Merge Request:
+        = link_to "#{@build.merge_request.to_reference}", merge_request_path(@build.merge_request)
     - if @build.duration
       %p.build-detail-row
         %span.build-light-text Duration:

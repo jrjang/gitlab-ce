@@ -1,19 +1,20 @@
 class CiBuild
   @interval: null
 
-  constructor: (@build_url, build_status) ->
+  constructor: (@build_url, @build_status) ->
     clearInterval(CiBuild.interval)
 
     $('.right-sidebar').niceScroll()
 
-    @getBuildTrace()
-    @initScrollButtonAffix()
+    if $('#build-trace').length
+      @getBuildTrace()
+      @initScrollButtonAffix()
 
-    if build_status == "running" || build_status == "pending"
+    if @build_status is "running" or @build_status is "pending"
       #
       # Bind autoscroll button to follow build output
       #
-      $("#autoscroll-button").bind "click", ->
+      $('#autoscroll-button').on 'click', ->
         state = $(this).data("state")
         if "enabled" is state
           $(this).data "state", "disabled"
@@ -41,10 +42,13 @@ class CiBuild
       success: (build) =>
         $('#build-trace .bash').html build.trace_html
 
-        if build.status == "running"
+        if build.status is "running"
           @checkAutoscroll()
-        else
+        else if build.status isnt "pending"
           $('.js-build-loading').remove()
+
+        if build.status isnt @build_status
+          Turbolinks.visit @build_url
 
   checkAutoscroll: ->
     $("html,body").scrollTop $("#build-trace").height()  if "enabled" is $("#autoscroll-button").data("state")

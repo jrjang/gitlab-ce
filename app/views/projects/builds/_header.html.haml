@@ -8,7 +8,6 @@
   = link_to namespace_project_commits_path(@project.namespace, @project, @build.ref) do
     %code
       = @build.ref
-  - merge_request = @build.merge_request
-  - if merge_request
-    via
-    = link_to "merge request #{merge_request.to_reference}", merge_request_path(merge_request)
+  - if @build.user
+    = render "user"
+  = time_ago_with_tooltip(@build.created_at)
