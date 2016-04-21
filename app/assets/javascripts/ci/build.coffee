@@ -4,8 +4,6 @@ class CiBuild
   constructor: (@build_url, @build_status) ->
     clearInterval(CiBuild.interval)
 
-    $('.right-sidebar').niceScroll()
-
     if $('#build-trace').length
       @getBuildTrace()
       @initScrollButtonAffix()

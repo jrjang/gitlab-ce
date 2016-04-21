@@ -44,26 +44,28 @@
           = link_to namespace_project_runners_path(@build.project.namespace, @build.project) do
             Runners page
 
-  .prepend-top-default
-    - if @build.active?
-      .autoscroll-container
-        %button.btn.btn-success.btn-sm#autoscroll-button{:type => "button", :data => {:state => 'disabled'}} enable autoscroll
-    - if @build.erased?
-      .erased.alert.alert-warning
-        - erased_by = "by #{link_to @build.erased_by.name, user_path(@build.erased_by)}" if @build.erased_by
-        Build has been erased #{erased_by.html_safe} #{time_ago_with_tooltip(@build.erased_at)}
-    - else
-      #js-build-scroll.scroll-controls
-        = link_to '#build-trace', class: 'btn' do
-          %i.fa.fa-angle-up
-        = link_to '#down-build-trace', class: 'btn' do
-          %i.fa.fa-angle-down
-      %pre.build-trace#build-trace
-        %code.bash
+  .row.prepend-top-default
+    .col-sm-9
+      - if @build.active?
+        .autoscroll-container
+          %button.btn.btn-success.btn-sm#autoscroll-button{:type => "button", :data => {:state => 'disabled'}} enable autoscroll
+      - if @build.erased?
+        .erased.alert.alert-warning
+          - erased_by = "by #{link_to @build.erased_by.name, user_path(@build.erased_by)}" if @build.erased_by
+          Build has been erased #{erased_by.html_safe} #{time_ago_with_tooltip(@build.erased_at)}
+      - else
+        #js-build-scroll.scroll-controls
+          = link_to '#build-trace', class: 'btn' do
+            %i.fa.fa-angle-up
+          = link_to '#down-build-trace', class: 'btn' do
+            %i.fa.fa-angle-down
+        %pre.build-trace#build-trace
+          %code.bash
 
-    #down-build-trace
+      #down-build-trace
 
-= render "sidebar"
+    .col-sm-3
+      = render "sidebar"
 
 :javascript
   new CiBuild("#{namespace_project_build_url(@project.namespace, @project, @build)}", "#{@build.status}")
