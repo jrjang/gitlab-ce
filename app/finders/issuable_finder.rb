@@ -237,7 +237,8 @@ class IssuableFinder
 
   def by_author(items)
     if author?
-      items = items.where(author_id: author.first.try(:id))
+      authors = author.map(&:id)
+      items = items.where(author_id: authors)
     end
 
     items

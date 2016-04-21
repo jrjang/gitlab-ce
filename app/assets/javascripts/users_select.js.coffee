@@ -128,10 +128,12 @@ class @UsersSelect
               users.splice(showDivider, 0, "divider")
 
             if users.length is 0 and term.length isnt 0 and $dropdown.hasClass('js-filter-submit js-author-search')
+              escapedTerm = _.escape(term).trim()
+
               users.push(
-                id: term.trim()
-                text: term.trim()
-                name: "Filter by author:<strong>#{term.trim()}</strong>"
+                id: escapedTerm
+                text: escapedTerm
+                name: "Filter by author: <strong>#{escapedTerm}</strong>"
               )
 
             # Send the data back
