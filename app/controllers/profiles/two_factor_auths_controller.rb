@@ -22,6 +22,14 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     end
 
     @qr_code = build_qr_code
+
+    u2f = U2F::U2F.new(request.base_url)
+    #key_handles = Registration.map(&:key_handle)
+    registration_requests = u2f.registration_requests
+    sign_requests = u2f.authentication_requests([])
+    session[:challenges] = registration_requests.map(&:challenge)
+
+    gon.push(u2f_request: {app_id: request.base_url, registration_requests: registration_requests})
   end
 
   def create
@@ -36,6 +44,20 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
       @qr_code = build_qr_code
 
       render 'new'
+    end
+  end
+
+  def create_u2f
+    begin
+      u2f = U2F::U2F.new(request.base_url)
+      response = U2F::RegisterResponse.load_from_json(params[:device_response])
+      u2f.register!(session[:challenges], response)
+    rescue Exception => e
+      @u2f_error = "Unable to register: #{e.class.name}"
+      @qr_code = build_qr_code
+      render :new
+    ensure
+      session.delete(:challenges)
     end
   end
 

@@ -335,6 +335,7 @@ Rails.application.routes.draw do
       resource :avatar, only: [:destroy]
       resource :two_factor_auth, only: [:new, :create, :destroy] do
         member do
+          post :create_u2f
           post :codes
           patch :skip
         end
