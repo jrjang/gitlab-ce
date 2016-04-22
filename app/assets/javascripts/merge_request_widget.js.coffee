@@ -8,8 +8,8 @@ class @MergeRequestWidget
 
   constructor: (@opts) ->
     $('#modal_merge_info').modal(show: false)
-    @firstCICheck = true
     @readyForCICheck = true
+    @cancel = false
     clearInterval @fetchBuildStatusInterval
 
     @clearEventListeners()
@@ -20,10 +20,16 @@ class @MergeRequestWidget
   clearEventListeners: ->
     $(document).off 'page:change.merge_request'
 
+  cancelPolling: ->
+    @cancel = true
+
   addEventListeners: ->
+    allowedPages = ['show', 'commits', 'builds', 'changes']
     $(document).on 'page:change.merge_request', =>
-      if $('body').data('page') isnt 'projects:merge_requests:show'
+      page = $('body').data('page').split(':').last()
+      if allowedPages.indexOf(page) < 0
         clearInterval @fetchBuildStatusInterval
+        @cancelPolling()
         @clearEventListeners()
 
   mergeInProgress: (deleteSourceBranch = false)->
@@ -66,17 +72,16 @@ class @MergeRequestWidget
     $('.ci-widget-fetching').show()
 
     $.getJSON @opts.ci_status_url, (data) =>
-      @readyForCICheck = true
+      return if @cancel
 
-      if @firstCICheck
-        @firstCICheck = false
-        @opts.ci_status = data.status
+      @readyForCICheck = true
 
       if @opts.ci_status is ''
         @opts.ci_status = data.status
         return
 
       if data.status isnt @opts.ci_status and data.status?
+        @opts.ci_status = data.status
         @showCIStatus data.status
         if data.coverage
           @showCICoverage data.coverage
@@ -104,8 +109,6 @@ class @MergeRequestWidget
               @close()
               Turbolinks.visit _this.opts.builds_path
           )
-
-        @opts.ci_status = data.status
 
   showCIStatus: (state) ->
     $('.ci_widget').hide()
