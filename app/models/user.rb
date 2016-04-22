@@ -324,14 +324,18 @@ class User < ActiveRecord::Base
     end
 
     def by_username_or_name_or_id(filter)
-      table   = arel_table
-      pattern = "%#{filter}%"
+      if filter =~ /\A\d+\z/
+        where(id: filter)
+      else
+        table   = arel_table
+        pattern = "%#{filter}%"
 
-      where(
-        table[:name].matches(pattern).
-          or(table[:username].matches(pattern)).
-          or(table[:id].eq(filter))
-      )
+        where(
+          table[:name].matches(pattern).
+            or(table[:username].matches(pattern)).
+            or(table[:id].eq(filter))
+        )
+      end
     end
 
     def by_username_or_id(name_or_id)

@@ -169,7 +169,7 @@ describe 'Filter issues', feature: true do
       fill_in "Search authors", with: "tester"
 
       page.within ".dropdown-menu-author" do
-        expect(page).to have_content "Filter by author:tester"
+        expect(page).to have_content "Filter by author: tester"
       end
     end
 
@@ -177,12 +177,12 @@ describe 'Filter issues', feature: true do
       page.within '.issues-list' do
         expect(page).to have_selector ".issue", count: 2
       end
-      
+
       click_button "Author"
       fill_in "Search authors", with: "tester"
 
       page.within ".dropdown-menu-author" do
-        click_link "Filter by author:tester"
+        click_link "Filter by author: tester"
       end
 
       page.within '.issues-list' do
