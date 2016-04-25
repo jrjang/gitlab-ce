@@ -81,9 +81,7 @@ describe "Builds" do
       end
 
       it 'has button to download artifacts' do
-        page.within('.artifacts') do
-          expect(page).to have_content 'Download'
-        end
+        expect(page).to have_content 'Download'
       end
     end
 
@@ -95,9 +93,7 @@ describe "Builds" do
       end
 
       it do
-        page.within('.build-controls') do
-          expect(page).to have_link 'Raw'
-        end
+        expect(page).to have_link 'Raw'
       end
     end
   end
@@ -129,7 +125,7 @@ describe "Builds" do
     before do
       @build.update_attributes(artifacts_file: artifacts_file)
       visit namespace_project_build_path(@project.namespace, @project, @build)
-      page.within('.artifacts') { click_link 'Download' }
+      click_link 'Download'
     end
 
     it { expect(page.response_headers['Content-Type']).to eq(artifacts_file.content_type) }
@@ -144,7 +140,7 @@ describe "Builds" do
     end
 
     it 'sends the right headers' do
-      page.within('.build-controls') { click_link 'Raw' }
+      click_link 'Raw'
 
       expect(page.response_headers['Content-Type']).to eq('text/plain; charset=utf-8')
       expect(page.response_headers['X-Sendfile']).to eq(@build.path_to_trace)
