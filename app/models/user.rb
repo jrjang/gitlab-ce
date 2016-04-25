@@ -324,7 +324,7 @@ class User < ActiveRecord::Base
     end
 
     def by_username_or_name_or_id(filter)
-      if filter =~ /\A\d+\z/
+      if filter.is_a? Integer
         where(id: filter)
       else
         table   = arel_table
