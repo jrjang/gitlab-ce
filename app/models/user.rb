@@ -332,8 +332,7 @@ class User < ActiveRecord::Base
 
         where(
           table[:name].matches(pattern).
-            or(table[:username].matches(pattern)).
-            or(table[:id].eq(filter))
+            or(table[:username].matches(pattern))
         )
       end
     end
