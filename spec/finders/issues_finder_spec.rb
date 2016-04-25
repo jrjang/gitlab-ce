@@ -3,6 +3,7 @@ require 'spec_helper'
 describe IssuesFinder do
   let(:user) { create :user }
   let(:user2) { create :user }
+  let(:user3) { create :user }
   let(:project1) { create(:project) }
   let(:project2) { create(:project) }
   let(:milestone) { create(:milestone, project: project1) }
@@ -10,6 +11,7 @@ describe IssuesFinder do
   let(:issue1) { create(:issue, author: user, assignee: user, project: project1, milestone: milestone) }
   let(:issue2) { create(:issue, author: user, assignee: user, project: project2) }
   let(:issue3) { create(:issue, author: user2, assignee: user2, project: project2) }
+  let(:issue4) { create(:issue, author: user3, project: project2) }
   let!(:label_link) { create(:label_link, label: label, target: issue2) }
 
   before do
@@ -42,6 +44,24 @@ describe IssuesFinder do
         params = { scope: "all", author: user2.id, state: 'opened' }
         issues = IssuesFinder.new(user, params).execute
         expect(issues).to eq([issue3])
+      end
+
+      it 'should filter by author name' do
+        params = { scope: "all", author: user2.name, state: 'opened' }
+        issues = IssuesFinder.new(user, params).execute
+        expect(issues).to eq([issue3])
+      end
+
+      it 'should filter by author username' do
+        params = { scope: "all", author: user2.username, state: 'opened' }
+        issues = IssuesFinder.new(user, params).execute
+        expect(issues).to eq([issue3])
+      end
+
+      it 'should filter by author outside of project' do
+        params = { scope: "all", author: user3.username, state: 'opened' }
+        issues = IssuesFinder.new(user, params).execute
+        expect(issues).to eq([issue4])
       end
 
       it 'should filter by milestone id' do
