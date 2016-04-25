@@ -9,6 +9,8 @@
       .title
         Test coverage
       %p.build-detail-row
+        %span.build-light-text
+          Coverage:
         #{@build.coverage}%
 
   - if can?(current_user, :read_build, @project) && @build.artifacts?
