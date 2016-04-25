@@ -290,8 +290,8 @@ $ ->
       $(document).trigger('breakpoint:change', [bootstrapBreakpoint])
 
   $(window)
-    .off "resize"
-    .on "resize", (e) ->
+    .off "resize.app"
+    .on "resize.app", (e) ->
       fitSidebarForSize()
 
   checkInitialSidebarSize()

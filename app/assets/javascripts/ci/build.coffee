@@ -1,8 +1,19 @@
-class CiBuild
+class @CiBuild
   @interval: null
 
   constructor: (@build_url, @build_status) ->
     clearInterval(CiBuild.interval)
+
+    # Init breakpoint checker
+    @bp = Breakpoints.get()
+    @hideSidebar()
+    $(document)
+      .off 'click', '.js-sidebar-build-toggle'
+      .on 'click', '.js-sidebar-build-toggle', @toggleSidebar
+
+    $(window)
+      .off 'resize.build'
+      .on 'resize.build', @hideSidebar
 
     if $('#build-trace').length
       @getBuildTrace()
@@ -62,4 +73,22 @@ class CiBuild
           $body.outerHeight() - ($buildTrace.outerHeight() + $buildTrace.offset().top)
     )
 
-@CiBuild = CiBuild
+  shouldHideSidebar: ->
+    bootstrapBreakpoint = @bp.getBreakpointSize()
+
+    bootstrapBreakpoint is 'xs' or bootstrapBreakpoint is 'sm'
+
+  toggleSidebar: =>
+    if @shouldHideSidebar()
+      $('.js-build-sidebar')
+        .toggleClass 'right-sidebar-expanded right-sidebar-collapsed'
+
+  hideSidebar: =>
+    if @shouldHideSidebar()
+      $('.js-build-sidebar')
+        .removeClass 'right-sidebar-expanded'
+        .addClass 'right-sidebar-collapsed'
+    else
+      $('.js-build-sidebar')
+        .removeClass 'right-sidebar-collapsed'
+        .addClass 'right-sidebar-expanded'

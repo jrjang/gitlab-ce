@@ -31,6 +31,10 @@ module NavHelper
         "page-gutter right-sidebar-expanded"
       end
     end
+
+    if current_path?('builds#show')
+      "page-gutter build-sidebar right-sidebar-expanded"
+    end
   end
 
   def nav_header_class

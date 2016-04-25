@@ -42,6 +42,11 @@
 
 .build-header {
   position: relative;
+  padding-right: 40px;
+
+  @media (min-width: $screen-sm-min) {
+    padding-right: 0;
+  }
 
   a {
     color: $gl-gray;
@@ -86,14 +91,23 @@
 }
 
 .right-sidebar.build-sidebar {
-  position: relative;
-  top: 0;
-  width: 100%;
   padding-top: $gl-padding;
   padding-bottom: $gl-padding;
 
+  &.right-sidebar-collapsed {
+    display: none;
+  }
+
   .block {
     width: 100%;
+  }
+
+  .build-sidebar-header {
+    padding-top: 0;
+
+    .gutter-toggle {
+      margin-top: 0;
+    }
   }
 }
 
@@ -103,4 +117,11 @@
 
 .build-light-text {
   color: $gl-placeholder-color;
+}
+
+.build-gutter-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -17px;
 }

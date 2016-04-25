@@ -3,7 +3,8 @@
   Build
   %strong ##{@build.id}
   for commit
-  %strong= link_to @build.commit.short_sha, ci_status_path(@build.commit)
+  = link_to ci_status_path(@build.commit) do
+    %strong= @build.commit.short_sha
   from
   = link_to namespace_project_commits_path(@project.namespace, @project, @build.ref) do
     %code
@@ -11,3 +12,5 @@
   - if @build.user
     = render "user"
   = time_ago_with_tooltip(@build.created_at)
+  %button.btn.btn-default.pull-right.visible-xs-block.visible-sm-block.build-gutter-toggle.js-sidebar-build-toggle{ role: "button", type: "button" }
+    = icon('angle-double-left')

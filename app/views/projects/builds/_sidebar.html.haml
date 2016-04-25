@@ -1,4 +1,9 @@
-%aside.right-sidebar.build-sidebar
+%aside.right-sidebar.right-sidebar-expanded.build-sidebar.js-build-sidebar
+  .block.build-sidebar-header.visible-xs-block.visible-sm-block.append-bottom-default
+    Build
+    %strong ##{@build.id}
+    %a.gutter-toggle.pull-right.js-sidebar-build-toggle{ href: "#" }
+      = icon('angle-double-right')
   - if @build.coverage
     .block.block-first
       .title
