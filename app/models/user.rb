@@ -110,6 +110,7 @@ class User < ActiveRecord::Base
   has_many :keys, dependent: :destroy
   has_many :emails, dependent: :destroy
   has_many :identities, dependent: :destroy, autosave: true
+  has_many :u2f_registrations, dependent: :destroy
 
   # Groups
   has_many :members, dependent: :destroy
