@@ -53,7 +53,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def user_params
-    params.require(:user).permit(:login, :password, :remember_me, :otp_attempt)
+    params.require(:user).permit(:login, :password, :remember_me, :otp_attempt, :device_response)
   end
 
   def find_user
@@ -95,6 +95,18 @@ class SessionsController < Devise::SessionsController
       if valid_otp_attempt?(user)
         # Remove any lingering user data from login
         session.delete(:otp_user_id)
+
+        sign_in(user) and return
+      else
+        flash.now[:alert] = 'Invalid two-factor code.'
+        render :two_factor and return
+      end
+    elsif user_params[:device_response].present? && session[:otp_user_id]
+      if U2fRegistration.authenticate(user, user_params[:device_response], session[:challenges])
+
+        # Remove any lingering user data from login
+        session.delete(:otp_user_id)
+        session.delete(:challenges)
 
         sign_in(user) and return
       else

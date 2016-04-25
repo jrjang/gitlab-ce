@@ -8,3 +8,18 @@
         %p.help-block.hint Enter the code from the two-factor app on your mobile device. If you've lost your device, you may enter one of your recovery codes.
         .prepend-top-20
           = f.submit "Verify code", class: "btn btn-save"
+
+      - if @key_handles.present?
+
+        %hr
+
+        Insert your security key. If it has a button, tap it. If not, remove and re-insert it.
+
+        = form_for(resource, as: resource_name, url: session_path(resource_name), method: :post, html: {class: "hidden", id: "authenticate_u2f"}) do |f|
+          = hidden_field_tag 'user[device_response]', nil, class: "form-control", id: "device_response", required: true
+          .prepend-top-default
+            = submit_tag 'Authenticate via U2F Device', class: 'btn btn-success'
+
+:javascript
+  var authenticate = new GitLabU2FAuthenticate(gon.u2f_request, $("#authenticate_u2f"));
+  authenticate.run();
