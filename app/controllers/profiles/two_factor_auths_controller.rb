@@ -24,7 +24,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     @qr_code = build_qr_code
 
     u2f = U2F::U2F.new(request.base_url)
-    #key_handles = Registration.map(&:key_handle)
+    @registrations = current_user.u2f_registrations
     @app_id = request.base_url
     @registration_requests = u2f.registration_requests
     sign_requests = u2f.authentication_requests([])

@@ -29,7 +29,7 @@ var U2FRegister = React.createClass({
       return (
         <div className="row append-bottom-10">
           <div className="col-md-3">
-            <a className="btn btn-info" onClick={this.inProgress}>Setup U2F Device</a>
+            <a className="btn btn-info" onClick={this.inProgress}>Setup New U2F Device</a>
           </div>
           <div className="col-md-9">
             <p>Your U2F device needs to be set up. Plug it in (if not already) and click the button on the left.</p>
