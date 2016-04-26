@@ -40,7 +40,7 @@
           = label_tag :pin_code, nil, class: "label-light"
           = text_field_tag :pin_code, nil, class: "form-control", required: true
         .prepend-top-default
-          = submit_tag 'Enable two-factor authentication', class: 'btn btn-success'
+          = submit_tag 'Register Google Authenticator', class: 'btn btn-success'
           = link_to 'Configure it later', skip_profile_two_factor_auth_path, :method => :patch,  class: 'btn btn-cancel' if two_factor_skippable?
 
 %hr

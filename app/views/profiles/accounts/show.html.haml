@@ -37,12 +37,11 @@
       Status: #{current_user.two_factor_enabled? ? 'Enabled' : 'Disabled'}
     - if current_user.two_factor_enabled?
       = link_to 'Manage Two-factor Authentication', new_profile_two_factor_auth_path, class: 'btn btn-info'
+      = link_to 'Disable', profile_two_factor_auth_path, method: :delete,
+                class: 'btn btn-danger', data: {confirm: t('views.accounts.show.disable_two_factor_confirm')}
     - else
-      %p
-        Download the Google Authenticator application from App Store for iOS or Google Play for Android and scan this code.
-        More information is available in the #{link_to('documentation', help_page_path('profile', 'two_factor_authentication'))}.
       .append-bottom-10
-        = link_to 'Enable two-factor authentication', new_profile_two_factor_auth_path, class: 'btn btn-success'
+        = link_to 'Enable Two-factor authentication', new_profile_two_factor_auth_path, class: 'btn btn-success'
 
 %hr
 - if button_based_providers.any?

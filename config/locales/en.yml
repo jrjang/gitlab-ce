@@ -15,3 +15,6 @@ en:
     two_factor_auths:
       new:
         already_enabled_otp: "You've already enabled two-factor authentication using mobile authenticator applications."
+    accounts:
+      show:
+        disable_two_factor_confirm: "Are you sure? This will invalidate your registered applications and U2F devices."
