@@ -27,7 +27,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     @registrations = current_user.u2f_registrations
     @app_id = request.base_url
     @registration_requests = u2f.registration_requests
-    sign_requests = u2f.authentication_requests([])
+    @sign_requests = u2f.authentication_requests(@registrations.map(&:key_handle))
     session[:challenges] = @registration_requests.map(&:challenge)
   end
 

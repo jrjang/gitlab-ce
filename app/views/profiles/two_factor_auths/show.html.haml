@@ -59,7 +59,8 @@
     - if @u2f_error
       .alert.alert-danger
         = @u2f_error
-    = react_component('U2FRegister', appId: @app_id, registerRequests: @registration_requests, authenticity_token: form_authenticity_token)
+    = react_component('U2FRegister', appId: @app_id, registerRequests: @registration_requests,
+                      authenticity_token: form_authenticity_token, signRequests: @sign_requests)
 
 :javascript
   $("#setup_u2f_btn").click(function(){

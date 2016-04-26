@@ -1,5 +1,5 @@
-// State Flow # 1: setup, in_progress, registration
-// State Flow # 2: setup, in_progress, error
+// State Flow #1: setup -> in_progress -> registration -> POST to server
+// State Flow #2: setup -> in_progress -> error -> setup
 
 var U2FRegister = React.createClass({
 
@@ -13,15 +13,22 @@ var U2FRegister = React.createClass({
 
   inProgress: function(event) {
     this.setState({status: "in_progress"});
-    u2f.register(this.props.appId, this.props.registerRequests, [], (function(registerResponse) {
-      console.log(registerResponse);
+    u2f.register(this.props.appId, this.props.registerRequests, this.props.signRequests, (function(registerResponse) {
       if (registerResponse.errorCode) {
-        this.setState({status: "error"});
-      }
-      else {
+        this.registerError(registerResponse.errorCode);
+      } else {
         this.setState({deviceResponse: JSON.stringify(registerResponse), status: "registration"});
       }
     }).bind(this), 10);
+  },
+
+  // List of error codes: https://developers.yubico.com/U2F/Libraries/Client_error_codes.html
+  registerError: function(errorCode) {
+    if(errorCode == 4) {
+      this.setState({status: "error", errorMessage: "This device has already been registered with us."});
+    } else {
+      this.setState({status: "error", errorMessage: "There was a problem communicating with your device."});
+    }
   },
 
   render: function() {
@@ -44,10 +51,12 @@ var U2FRegister = React.createClass({
     }
     else if (this.state.status == "error") {
       return (
-        <p>
-          <span>There was a problem communicating with your device.</span>
-          <span><a onClick={this.reset}>Try again?</a></span>
-        </p>
+        <div>
+          <p>
+            <span>{this.state.errorMessage}</span>
+          </p>
+          <a className="btn btn-warning" onClick={this.reset}>Try again?</a>
+        </div>
       );
     }
     else if (this.state.status == "registration") {
