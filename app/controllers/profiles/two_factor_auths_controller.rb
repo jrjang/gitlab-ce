@@ -33,7 +33,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
 
   def create
     if current_user.validate_and_consume_otp!(params[:pin_code])
-      current_user.two_factor_enabled = true
+      current_user.otp_required_for_login = true
       @codes = current_user.generate_otp_backup_codes!
       current_user.save!
 
@@ -52,9 +52,6 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     reg = u2f.register!(session[:challenges], response)
     current_user.u2f_registrations.create!(certificate: reg.certificate, key_handle: reg.key_handle,
                                           public_key: reg.public_key, counter: reg.counter)
-
-    current_user.two_factor_enabled = true
-    current_user.save!
 
     redirect_to profile_account_path, notice: "Your U2F device was registered!"
   rescue Exception => e

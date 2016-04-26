@@ -86,7 +86,6 @@ class User < ActiveRecord::Base
 
   devise :two_factor_authenticatable,
          otp_secret_encryption_key: File.read(Rails.root.join('.secret')).chomp
-  alias_attribute :two_factor_enabled, :otp_required_for_login
 
   devise :two_factor_backupable, otp_number_of_backup_codes: 10
   serialize :otp_backup_codes, JSON
@@ -377,22 +376,29 @@ class User < ActiveRecord::Base
   end
 
   def disable_two_factor!
-    update_attributes(
-      two_factor_enabled:          false,
-      encrypted_otp_secret:        nil,
-      encrypted_otp_secret_iv:     nil,
-      encrypted_otp_secret_salt:   nil,
-      otp_grace_period_started_at: nil,
-      otp_backup_codes:            nil
-    )
+    transaction do
+      update_attributes(
+        otp_required_for_login:      false,
+        encrypted_otp_secret:        nil,
+        encrypted_otp_secret_iv:     nil,
+        encrypted_otp_secret_salt:   nil,
+        otp_grace_period_started_at: nil,
+        otp_backup_codes:            nil
+      )
+      self.u2f_registrations.destroy_all
+    end
+  end
+
+  def two_factor_enabled?
+    two_factor_otp_enabled? || two_factor_u2f_enabled?
   end
 
   def two_factor_otp_enabled?
-    two_factor_enabled? && self.encrypted_otp_secret.present?
+    self.otp_required_for_login?
   end
 
   def two_factor_u2f_enabled?
-    two_factor_enabled? && self.u2f_registrations.exists?
+    self.u2f_registrations.exists?
   end
 
   def namespace_uniq
