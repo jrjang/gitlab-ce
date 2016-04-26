@@ -14,7 +14,7 @@
     %li.filter-two-factor-enabled{class: "#{'active' if params[:filter] == 'two_factor_enabled'}"}
       = link_to admin_users_path(filter: 'two_factor_enabled') do
         2FA Enabled
-        %small.badge= number_with_delimiter(User.with_two_factor.count)
+        %small.badge= number_with_delimiter(User.with_two_factor.count.length)
     %li.filter-two-factor-disabled{class: "#{'active' if params[:filter] == 'two_factor_disabled'}"}
       = link_to admin_users_path(filter: 'two_factor_disabled') do
         2FA Disabled
