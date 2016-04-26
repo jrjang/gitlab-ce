@@ -247,7 +247,7 @@ describe Note, models: true do
         code = Gitlab::Diff::LineCode.generate(diff.new_path, line.new_pos, line.old_pos)
 
         # We're persisting in order to trigger the set_diff callback
-        note = create(:note, noteable: merge, line_code: code)
+        note = create(:note, noteable: merge, project: merge.project, line_code: code)
 
         # Make sure we don't get a false positive from a guard clause
         expect(note).to receive(:find_noteable_diff).and_call_original
@@ -301,12 +301,18 @@ describe Note, models: true do
     let(:merge_request) { create :merge_request }
 
     it "converts aliases to actual name" do
-      note = create(:note, note: ":+1:", noteable: merge_request)
+      note = create(:note, note: ":+1:",
+                           noteable: merge_request,
+                           project: merge_request.project)
+
       expect(note.reload.note).to eq("thumbsup")
     end
 
     it "is not an award emoji when comment is on a diff" do
-      note = create(:note, note: ":blowfish:", noteable: merge_request, line_code: "11d5d2e667e9da4f7f610f81d86c974b146b13bd_0_2")
+      note = create(:note, note: ":blowfish:",
+                           noteable: merge_request,
+                           project: merge_request.project,
+                           line_code: "11d5d2e667e9da4f7f610f81d86c974b146b13bd_0_2")
       note = note.reload
 
       expect(note.note).to eq(":blowfish:")
