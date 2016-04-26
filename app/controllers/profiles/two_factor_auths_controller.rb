@@ -1,7 +1,7 @@
 class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
   skip_before_action :check_2fa_requirement
 
-  def new
+  def show
     unless current_user.otp_secret
       current_user.otp_secret = User.generate_otp_secret(32)
     end
