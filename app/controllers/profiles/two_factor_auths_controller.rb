@@ -12,7 +12,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
 
     current_user.save! if current_user.changed?
 
-    if two_factor_authentication_required?
+    if two_factor_authentication_required? && !current_user.two_factor_enabled?
       if two_factor_grace_period_expired?
         flash.now[:alert] = 'You must enable Two-factor Authentication for your account.'
       else
