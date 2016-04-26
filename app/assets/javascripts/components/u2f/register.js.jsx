@@ -7,12 +7,15 @@ var U2FRegister = React.createClass({
     return {status: "setup"};
   },
 
+  reset: function() {
+    this.setState({status: "setup"});
+  },
+
   inProgress: function(event) {
     this.setState({status: "in_progress"});
     u2f.register(this.props.appId, this.props.registerRequests, [], (function(registerResponse) {
       console.log(registerResponse);
       if (registerResponse.errorCode) {
-        console.log('Registration Error: ' + registerResponse.errorCode);
         this.setState({status: "error"});
       }
       else {
@@ -42,8 +45,8 @@ var U2FRegister = React.createClass({
     else if (this.state.status == "error") {
       return (
         <p>
-          There was a problem communicating with your device.
-          <a onClick={this.getInitialState}>Try again?</a>
+          <span>There was a problem communicating with your device.</span>
+          <span><a onClick={this.reset}>Try again?</a></span>
         </p>
       );
     }

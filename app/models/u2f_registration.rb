@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: u2f_registrations
+#
+#  id          :integer          not null, primary key
+#  certificate :text
+#  key_handle  :string
+#  public_key  :string
+#  counter     :integer
+#  user_id     :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 # Registration information for U2F devices, like Yubikeys
 
 class U2fRegistration < ActiveRecord::Base
