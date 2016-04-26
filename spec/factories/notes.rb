@@ -25,10 +25,10 @@ include ActionDispatch::TestProcess
 
 FactoryGirl.define do
   factory :note do
+    project
     note "Note"
     author
-    noteable { create(:issue) }
-    project { noteable.project }
+    noteable { create(:issue, project: project) }
 
     factory :note_on_issue,              aliases: [:votable_note]
     factory :note_on_commit,             traits: [:on_commit]
@@ -41,7 +41,6 @@ FactoryGirl.define do
     factory :upvote_note,                traits: [:award, :upvote]
 
     trait :on_commit do
-      project
       noteable nil
       commit_id RepoHelpers.sample_commit.id
       noteable_type "Commit"
@@ -52,11 +51,11 @@ FactoryGirl.define do
     end
 
     trait :on_merge_request do
-      noteable { create(:merge_request) }
+      noteable { create(:merge_request, project: project) }
     end
 
     trait :on_project_snippet do
-      noteable { create(:snippet) }
+      noteable { create(:snippet, project: project) }
     end
 
     trait :system do
