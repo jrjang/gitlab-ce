@@ -1,45 +1,47 @@
 - page_title 'Two-Factor Authentication', 'Account'
 - header_title "Two-Factor Authentication", profile_two_factor_auth_path
 
-.row.prepend-top-default
 
+.row.prepend-top-default
   .col-lg-3
     %h4.prepend-top-0
       Register Google Authenticator
     %p
       Use an app on your mobile device to add the second factor of authentication.
   .col-lg-9
-    %p
-      Download the Google Authenticator application from App Store for iOS or Google Play for Android and scan this code.
-      More information is available in the #{link_to('documentation', help_page_path('profile', 'two_factor_authentication'))}.
-    .row.append-bottom-10
-      .col-md-3
-        = raw @qr_code
-      .col-md-9
-        .account-well
-          %p.prepend-top-0.append-bottom-0
-            Can't scan the code?
-          %p.prepend-top-0.append-bottom-0
-            To add the entry manually, provide the following details to the application on your phone.
-          %p.prepend-top-0.append-bottom-0
-            Account:
-            = current_user.email
-          %p.prepend-top-0.append-bottom-0
-            Key:
-            = current_user.otp_secret.scan(/.{4}/).join(' ')
-          %p.two-factor-new-manual-content
-            Time based: Yes
-    = form_tag profile_two_factor_auth_path, method: :post do |f|
-      - if @error
-        .alert.alert-danger
-          = @error
-      .form-group
-        = label_tag :pin_code, nil, class: "label-light"
-        = text_field_tag :pin_code, nil, class: "form-control", required: true
-      .prepend-top-default
-        = submit_tag 'Enable two-factor authentication', class: 'btn btn-success'
-        = link_to 'Configure it later', skip_profile_two_factor_auth_path, :method => :patch,  class: 'btn btn-cancel' if two_factor_skippable?
-
+    - if current_user.two_factor_otp_enabled?
+      = fa_stacked_icon "check inverse", base: "circle", class: "fa-2x text-success", text: t('views.two_factor_auths.new.already_enabled_otp')
+    - else
+      %p
+        Download the Google Authenticator application from App Store for iOS or Google Play for Android and scan this code.
+        More information is available in the #{link_to('documentation', help_page_path('profile', 'two_factor_authentication'))}.
+      .row.append-bottom-10
+        .col-md-3
+          = raw @qr_code
+        .col-md-9
+          .account-well
+            %p.prepend-top-0.append-bottom-0
+              Can't scan the code?
+            %p.prepend-top-0.append-bottom-0
+              To add the entry manually, provide the following details to the application on your phone.
+            %p.prepend-top-0.append-bottom-0
+              Account:
+              = current_user.email
+            %p.prepend-top-0.append-bottom-0
+              Key:
+              = current_user.otp_secret.scan(/.{4}/).join(' ')
+            %p.two-factor-new-manual-content
+              Time based: Yes
+      = form_tag profile_two_factor_auth_path, method: :post do |f|
+        - if @error
+          .alert.alert-danger
+            = @error
+        .form-group
+          = label_tag :pin_code, nil, class: "label-light"
+          = text_field_tag :pin_code, nil, class: "form-control", required: true
+        .prepend-top-default
+          = submit_tag 'Enable two-factor authentication', class: 'btn btn-success'
+          = link_to 'Configure it later', skip_profile_two_factor_auth_path, :method => :patch,  class: 'btn btn-cancel' if two_factor_skippable?
 
 %hr
 
@@ -54,21 +56,12 @@
     %p
       Use a #{link_to('Yubikey', 'https://www.yubico.com/products/yubikey-hardware/')} (or similar U2F) device.
       More information is available in the #{link_to('documentation', help_page_path('profile', 'two_factor_authentication'))}.
-    .row.append-bottom-10
-      .col-md-3
-        = raw @qr_code
-      .col-md-9
-        .account-well
-          %p Challenges are #{session[:challenges]}
-
     - if @u2f_error
       .alert.alert-danger
         = @u2f_error
-    = form_tag create_u2f_profile_two_factor_auth_path, method: :post, class: "hidden", id: "create_u2f" do |f|
-      = hidden_field_tag :device_response, nil, class: "form-control", required: true
-      .prepend-top-default
-        = submit_tag 'Enable via U2F Device', class: 'btn btn-success'
-        = link_to 'Configure it later', skip_profile_two_factor_auth_path, :method => :patch,  class: 'btn btn-cancel' if two_factor_skippable?
+    = react_component('U2FRegister', appId: @app_id, registerRequests: @registration_requests, authenticity_token: form_authenticity_token)
 
 :javascript
-  var gitlab_u2f = new GitLabU2F(gon.u2f_request, $("#create_u2f"));
+  $("#setup_u2f_btn").click(function(){
+    var gitlab_u2f = new GitLabU2F(gon.u2f_request, $("#setup_u2f"), $("#register_u2f"));
+  });

@@ -12,3 +12,6 @@ en:
     pagination:
       previous: "Prev"
       next: "Next"
+    two_factor_auths:
+      new:
+        already_enabled_otp: "You've already enabled two-factor authentication using mobile authenticator applications."

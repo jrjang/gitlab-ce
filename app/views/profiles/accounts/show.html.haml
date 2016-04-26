@@ -34,16 +34,16 @@
       Increase your account's security by enabling two-factor authentication (2FA).
   .col-lg-9
     %p
-      Status: #{current_user.two_factor_enabled? ? 'enabled' : 'disabled'}
-    - if !current_user.two_factor_enabled?
+      Status: #{current_user.two_factor_enabled? ? 'Enabled' : 'Disabled'}
+    - if current_user.two_factor_enabled?
+      = link_to 'Manage Two-factor Authentication', new_profile_two_factor_auth_path, class: 'btn btn-info'
+    - else
       %p
         Download the Google Authenticator application from App Store for iOS or Google Play for Android and scan this code.
         More information is available in the #{link_to('documentation', help_page_path('profile', 'two_factor_authentication'))}.
       .append-bottom-10
         = link_to 'Enable two-factor authentication', new_profile_two_factor_auth_path, class: 'btn btn-success'
-    - else
-      = link_to 'Disable Two-factor Authentication', profile_two_factor_auth_path, method: :delete, class: 'btn btn-danger',
-              data: { confirm: 'Are you sure?' }
+
 %hr
 - if button_based_providers.any?
   .row.prepend-top-default

@@ -211,6 +211,7 @@ gem "coffee-rails", '~> 4.1.0'
 gem "uglifier", '~> 2.7.2'
 gem 'turbolinks', '~> 2.5.0'
 gem 'jquery-turbolinks', '~> 2.1.0'
+gem 'react-rails', '~> 1.6.0'
 
 gem 'addressable',        '~> 2.3.8'
 gem 'bootstrap-sass',     '~> 3.3.0'

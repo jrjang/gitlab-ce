@@ -387,6 +387,14 @@ class User < ActiveRecord::Base
     )
   end
 
+  def two_factor_otp_enabled?
+    two_factor_enabled? && self.encrypted_otp_secret.present?
+  end
+
+  def two_factor_u2f_enabled?
+    two_factor_enabled? && self.u2f_registrations.exists?
+  end
+
   def namespace_uniq
     # Return early if username already failed the first uniqueness validation
     return if self.errors.key?(:username) &&

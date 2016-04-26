@@ -52,6 +52,8 @@
 #= require shortcuts_network
 #= require jquery.nicescroll
 #= require date.format
+#= require react
+#= require react_ujs
 #= require_tree .
 #= require fuzzaldrin-plus
 #= require cropper
