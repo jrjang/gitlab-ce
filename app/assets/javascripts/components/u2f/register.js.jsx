@@ -46,7 +46,7 @@ var U2FRegister = React.createClass({
     }
     else if (this.state.status == "in_progress") {
       return (
-        <p>Communicating with your device. Press the button on your device now.</p>
+        <p>Trying to communicate with your device. Plug it in (if you haven't already) and press the button on the device now.</p>
       );
     }
     else if (this.state.status == "error") {
