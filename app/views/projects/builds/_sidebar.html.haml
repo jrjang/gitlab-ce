@@ -28,10 +28,11 @@
   .block{ class: ("block-first" if !@build.coverage && !(can?(current_user, :read_build, @project) && @build.artifacts?)) }
     .title
       Build details
-      - if @build.active?
-        = link_to "Cancel", cancel_namespace_project_build_path(@project.namespace, @project, @build), class: 'pull-right', method: :post
-      - elsif @build.retryable?
-        = link_to "Retry", retry_namespace_project_build_path(@project.namespace, @project, @build), class: 'pull-right', method: :post
+      - if can?(current_user, :update_build, @project) && @build.erasable?
+        = link_to erase_namespace_project_build_path(@project.namespace, @project, @build),
+                  class: "pull-right", method: :post,
+                  data: { confirm: "Are you sure you want to erase this build?" } do
+          Erase
     - if @build.merge_request
       %p.build-detail-row
         %span.build-light-text Merge Request:
@@ -57,11 +58,10 @@
     .btn-group.btn-group-justified{ role: :group }
       - if @build.has_trace?
         = link_to 'Raw', raw_namespace_project_build_path(@project.namespace, @project, @build), class: 'btn btn-sm btn-default'
-      - if can?(current_user, :update_build, @project) && @build.erasable?
-        = link_to erase_namespace_project_build_path(@project.namespace, @project, @build),
-                  class: 'btn btn-sm btn-default', method: :post,
-                  data: { confirm: 'Are you sure you want to erase this build?' } do
-          Erase
+      - if @build.active?
+        = link_to "Cancel", cancel_namespace_project_build_path(@project.namespace, @project, @build), class: 'btn btn-sm btn-default', method: :post
+      - elsif @build.retryable?
+        = link_to "Retry", retry_namespace_project_build_path(@project.namespace, @project, @build), class: 'btn btn-sm btn-default', method: :post
 
   - if @build.trigger_request
     .build-widget
