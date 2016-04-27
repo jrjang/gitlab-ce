@@ -30,7 +30,7 @@ class U2fRegistration < ActiveRecord::Base
     registration.update(counter: response.counter)
 
     true
-  rescue U2F::Error => e
+  rescue U2F::Error
     false
   end
 end

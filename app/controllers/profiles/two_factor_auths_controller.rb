@@ -49,7 +49,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
                                            public_key: reg.public_key, counter: reg.counter)
     session.delete(:challenges)
     redirect_to profile_account_path, notice: "Your U2F device was registered!"
-  rescue Exception => e
+  rescue StandardError => e
     @u2f_error = "Unable to register: #{e.class.name}"
     @qr_code = build_qr_code
     setup_u2f_registration
