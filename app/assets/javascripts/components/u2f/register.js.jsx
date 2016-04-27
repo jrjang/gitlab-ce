@@ -32,7 +32,12 @@ var U2FRegister = React.createClass({
   },
 
   render: function() {
-    if (this.state.status == "setup") {
+    if (!U2FUtil.isU2FSupported()) {
+      return (
+        <p>Your browser doesn't support U2F. Please use Google Chrome (version 41 or newer).</p>
+      );
+    }
+    else if (this.state.status == "setup") {
       return (
         <div className="row append-bottom-10">
           <div className="col-md-3">

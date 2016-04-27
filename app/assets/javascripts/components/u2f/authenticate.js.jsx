@@ -28,7 +28,12 @@ var U2FAuthenticate = React.createClass({
   },
 
   render: function() {
-    if (this.state.status == "setup") {
+    if (!U2FUtil.isU2FSupported()) {
+      return (
+        <p>Your browser doesn't support U2F. Please use Google Chrome (version 41 or newer).</p>
+      );
+    }
+    else if (this.state.status == "setup") {
       return (
         <div>
           <p>Insert your security key (if you haven't already), and press the button below.</p>
