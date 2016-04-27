@@ -110,8 +110,8 @@ class SessionsController < Devise::SessionsController
 
         sign_in(user) and return
       else
-        flash.now[:alert] = 'Invalid two-factor code.'
-        render :two_factor and return
+        flash.now[:alert] = 'Authentication via U2F device failed.'
+        prompt_for_two_factor(user)
       end
     else
       if user && user.valid_password?(user_params[:password])

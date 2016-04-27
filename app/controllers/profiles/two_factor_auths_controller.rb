@@ -23,12 +23,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
 
     @qr_code = build_qr_code
 
-    u2f = U2F::U2F.new(request.base_url)
-    @registrations = current_user.u2f_registrations
-    @app_id = request.base_url
-    @registration_requests = u2f.registration_requests
-    @sign_requests = u2f.authentication_requests(@registrations.map(&:key_handle))
-    session[:challenges] = @registration_requests.map(&:challenge)
+    setup_u2f_registration
   end
 
   def create
@@ -42,7 +37,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
       @error = 'Invalid pin code'
       @qr_code = build_qr_code
 
-      render 'new'
+      render 'show'
     end
   end
 
@@ -51,15 +46,14 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     response = U2F::RegisterResponse.load_from_json(params[:device_response])
     reg = u2f.register!(session[:challenges], response)
     current_user.u2f_registrations.create!(certificate: reg.certificate, key_handle: reg.key_handle,
-                                          public_key: reg.public_key, counter: reg.counter)
-
+                                           public_key: reg.public_key, counter: reg.counter)
+    session.delete(:challenges)
     redirect_to profile_account_path, notice: "Your U2F device was registered!"
   rescue Exception => e
     @u2f_error = "Unable to register: #{e.class.name}"
     @qr_code = build_qr_code
-    render :new
-  ensure
-    session.delete(:challenges)
+    setup_u2f_registration
+    render :show
   end
 
   def codes
@@ -92,5 +86,14 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
 
   def issuer_host
     Gitlab.config.gitlab.host
+  end
+
+  def setup_u2f_registration
+    u2f = U2F::U2F.new(request.base_url)
+    @registrations = current_user.u2f_registrations
+    @app_id = request.base_url
+    @registration_requests = u2f.registration_requests
+    @sign_requests = u2f.authentication_requests(@registrations.map(&:key_handle))
+    session[:challenges] = @registration_requests.map(&:challenge)
   end
 end
