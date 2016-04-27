@@ -2,7 +2,7 @@ class CreateU2fRegistrations < ActiveRecord::Migration
   def change
     create_table :u2f_registrations do |t|
       t.text :certificate
-      t.string :key_handle
+      t.string :key_handle, index: true
       t.string :public_key
       t.integer :counter
       t.references :user, index: true, foreign_key: true

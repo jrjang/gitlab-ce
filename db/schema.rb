@@ -935,6 +935,7 @@ ActiveRecord::Schema.define(version: 20160425045124) do
     t.datetime "updated_at",  null: false
   end
 
+  add_index "u2f_registrations", ["key_handle"], name: "index_u2f_registrations_on_key_handle", using: :btree
   add_index "u2f_registrations", ["user_id"], name: "index_u2f_registrations_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
