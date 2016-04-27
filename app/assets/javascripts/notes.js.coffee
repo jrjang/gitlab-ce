@@ -373,11 +373,11 @@ class @Notes
 
     new GLForm form
     if scrollTo? and myLastNote?
-      # scroll to the bottom 
+      # scroll to the bottom
       # so the open of the last element doesn't make a jump
       $('html, body').scrollTop($(document).height());
       $('html, body').animate({
-        scrollTop: myLastNote.offset().top - 150  
+        scrollTop: myLastNote.offset().top - 150
       }, 500, ->
         $noteText = form.find(".js-note-text")
         $noteText.focus()
@@ -533,6 +533,7 @@ class @Notes
 
       # show the form
       @setupDiscussionNoteForm $link, newForm
+      $link.trigger('createIssueFromComment:show')
 
   ###
   Called in response to "cancel" on a diff note form.

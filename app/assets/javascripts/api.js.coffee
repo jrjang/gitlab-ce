@@ -5,6 +5,7 @@
   group_projects_path: "/api/:version/groups/:id/projects.json"
   projects_path: "/api/:version/projects.json"
   labels_path: "/api/:version/projects/:id/labels"
+  issues_path: "/api/:version/projects/:id/issues"
   license_path: "/api/:version/licenses/:key"
 
   group: (group_id, callback) ->
@@ -75,6 +76,21 @@
       dataType: "json"
     ).done (label) ->
       callback(label)
+    .error (message) ->
+      callback(message.responseJSON)
+
+  newIssue: (project_id, data, callback) ->
+    url = Api.buildUrl(Api.issues_path)
+    url = url.replace(':id', project_id)
+
+    data.private_token = gon.api_token
+    $.ajax(
+      url: url
+      type: "POST"
+      data: data
+      dataType: "json"
+    ).done (issue) ->
+      callback(issue)
     .error (message) ->
       callback(message.responseJSON)
 
