@@ -41,7 +41,6 @@
           = text_field_tag :pin_code, nil, class: "form-control", required: true
         .prepend-top-default
           = submit_tag 'Register Google Authenticator', class: 'btn btn-success'
-          = link_to 'Configure it later', skip_profile_two_factor_auth_path, :method => :patch,  class: 'btn btn-cancel' if two_factor_skippable?
 
 %hr
 
@@ -62,7 +61,8 @@
     = react_component('U2FRegister', appId: @app_id, registerRequests: @registration_requests,
                       authenticity_token: form_authenticity_token, signRequests: @sign_requests)
 
-:javascript
-  $("#setup_u2f_btn").click(function(){
-    var gitlab_u2f = new GitLabU2F(gon.u2f_request, $("#setup_u2f"), $("#register_u2f"));
-  });
+- if two_factor_skippable?
+  :javascript
+    var button = '<a class="btn btn-xs btn-warning pull-right" data-method="patch" href="/profile/two_factor_auth/skip">Configure it later</a>';
+    $(".flash-alert").append(button);
+
