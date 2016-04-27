@@ -253,9 +253,9 @@ class IssuableFinder
         items = items.where(milestone_id: [-1, nil])
       elsif filter_by_upcoming_milestone?
         upcoming = Milestone.where(project_id: projects).upcoming
-        items = items.joins(:milestone).where(milestones: { title: upcoming.try(:title) })
+        items = items.left_joins_milestones.where(milestones: { title: upcoming.try(:title) })
       else
-        items = items.joins(:milestone).where(milestones: { title: params[:milestone_title] })
+        items = items.left_joins_milestones.where(milestones: { title: params[:milestone_title] })
 
         if projects
           items = items.where(milestones: { project_id: projects })
