@@ -1,20 +1,20 @@
 %div
   .login-box
     .login-heading
-      %h3 Two-factor Authentication
+      %h3 Two-Factor Authentication
     .login-body
-      %h5 Authenticate via One-Time Password
-      = form_for(resource, as: resource_name, url: session_path(resource_name), method: :post) do |f|
-        = f.text_field :otp_attempt, class: 'form-control', placeholder: 'Two-factor Authentication code', required: true, autofocus: true
-        %p.help-block.hint Enter the code from the two-factor app on your mobile device. If you've lost your device, you may enter one of your recovery codes.
-        .prepend-top-20
-          = f.submit "Verify code", class: "btn btn-save"
+      - if @user.two_factor_otp_enabled?
 
-      - if @key_handles.present?
+        %h5 Authenticate via One-Time Password
+        = form_for(resource, as: resource_name, url: session_path(resource_name), method: :post) do |f|
+          = f.text_field :otp_attempt, class: 'form-control', placeholder: 'Two-factor authentication code', required: true, autofocus: true
+          %p.help-block.hint Enter the code from the two-factor app on your mobile device. If you've lost your device, you may enter one of your recovery codes.
+          .prepend-top-20
+            = f.submit "Verify code", class: "btn btn-save"
 
+      - if @user.two_factor_u2f_enabled?
+        
         %hr
-
         %h5 Authenticate via U2F Device
-
         = react_component('U2FAuthenticate', appId: @app_id, challenges: @challenges,
                            authenticity_token: form_authenticity_token, signRequests: @sign_requests)
