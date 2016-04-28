@@ -94,7 +94,7 @@ class Admin::ApplicationSettingsController < Admin::ApplicationController
       :email_author_in_body,
       :repository_checks_enabled,
       :metrics_packet_size,
-      :skip_user_confirmation_email,
+      :send_user_confirmation_email,
       restricted_visibility_levels: [],
       import_sources: []
     )
