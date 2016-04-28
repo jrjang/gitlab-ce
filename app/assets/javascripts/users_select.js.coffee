@@ -93,7 +93,9 @@ class @UsersSelect
 
       $dropdown.glDropdown(
         data: (term, callback) =>
-          @users term, (users) =>
+          isAuthorFilter = $('.js-author-search')
+
+          @users term, term is '' and isAuthorFilter, (users) =>
             if term.length is 0
               showDivider = 0
 
@@ -126,15 +128,6 @@ class @UsersSelect
 
             if showDivider
               users.splice(showDivider, 0, "divider")
-
-            if users.length is 0 and term.length isnt 0 and $dropdown.hasClass('js-filter-submit js-author-search')
-              escapedTerm = _.escape(term).trim()
-
-              users.push(
-                id: escapedTerm
-                text: escapedTerm
-                name: "Filter by author: <strong>#{escapedTerm}</strong>"
-              )
 
             # Send the data back
             callback users
@@ -311,7 +304,7 @@ class @UsersSelect
 
   # Return users list. Filtered by query
   # Only active users retrieved
-  users: (query, callback) =>
+  users: (query, fromProject, callback) =>
     url = @buildUrl(@usersPath)
 
     $.ajax(
@@ -320,7 +313,7 @@ class @UsersSelect
         search: query
         per_page: 20
         active: true
-        project_id: @projectId
+        project_id: @projectId if fromProject
         group_id: @groupId
         current_user: @showCurrentUser
         author_id: @authorId

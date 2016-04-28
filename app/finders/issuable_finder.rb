@@ -151,15 +151,15 @@ class IssuableFinder
   end
 
   def author?
-    params[:author].present?
+    params[:author_id].present?
   end
 
   def author
     return @author if defined?(@author)
 
     @author =
-      if author? && params[:author] != NONE
-        User.by_username_or_name_or_id(params[:author])
+      if author? && params[:author_id] != NONE
+        User.find(params[:author_id])
       else
         nil
       end
@@ -237,8 +237,7 @@ class IssuableFinder
 
   def by_author(items)
     if author?
-      authors = author.map(&:id)
-      items = items.where(author_id: authors)
+      items = items.where(author_id: author.try(:id))
     end
 
     items

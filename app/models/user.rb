@@ -323,20 +323,6 @@ class User < ActiveRecord::Base
       find_by!('lower(username) = ?', username.downcase)
     end
 
-    def by_username_or_name_or_id(filter)
-      if filter.is_a? Integer
-        where(id: filter)
-      else
-        table   = arel_table
-        pattern = "%#{filter}%"
-
-        where(
-          table[:name].matches(pattern).
-            or(table[:username].matches(pattern))
-        )
-      end
-    end
-
     def by_username_or_id(name_or_id)
       find_by('users.username = ? OR users.id = ?', name_or_id.to_s, name_or_id.to_i)
     end

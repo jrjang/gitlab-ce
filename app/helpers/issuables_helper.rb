@@ -53,7 +53,7 @@ module IssuablesHelper
     return default_label if user_id.nil?
     return "Unassigned" if user_id == "0"
 
-    user = User.by_username_or_name_or_id(user_id).first
+    user = User.find_by(id: user_id)
 
     if user
       user.name

@@ -67,7 +67,7 @@
   updateStateFilters: ->
     stateFilters =  $('.issues-state-filters')
     newParams = {}
-    paramKeys = ['author', 'milestone_title', 'assignee_id', 'issue_search']
+    paramKeys = ['author_id', 'milestone_title', 'assignee_id', 'issue_search']
 
     for paramKey in paramKeys
       newParams[paramKey] = gl.utils.getParameterValues(paramKey)[0] or ''

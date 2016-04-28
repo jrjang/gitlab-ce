@@ -1,16 +1,16 @@
 .issues-filters
   .issues-details-filters.gray-content-block.second-block
-    = form_tag page_filter_path(without: [:assignee_id, :author, :milestone_title, :label_name]), method: :get, class: 'filter-form' do
+    = form_tag page_filter_path(without: [:assignee_id, :author_id, :milestone_title, :label_name]), method: :get, class: 'filter-form' do
       - if controller.controller_name == 'issues' && can?(current_user, :admin_issue, @project)
         .check-all-holder
           = check_box_tag "check_all_issues", nil, false,
             class: "check_all_issues left"
       .issues-other-filters
         .filter-item.inline
-          - if params[:author].present?
-            = hidden_field_tag(:author, params[:author])
-          = dropdown_tag(user_dropdown_label(params[:author], "Author"), options: { toggle_class: "js-user-search js-filter-submit js-author-search", title: "Filter by author", filter: true, dropdown_class: "dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit",
-            placeholder: "Search authors", data: { any_user: "Any Author", first_user: (current_user.username if current_user), current_user: true, project_id: (@project.id if @project), selected: params[:author], field_name: "author", default_label: "Author" } })
+          - if params[:author_id].present?
+            = hidden_field_tag(:author_id, params[:author_id])
+          = dropdown_tag(user_dropdown_label(params[:author_id], "Author"), options: { toggle_class: "js-user-search js-filter-submit js-author-search", title: "Filter by author", filter: true, dropdown_class: "dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit",
+            placeholder: "Search authors", data: { any_user: "Any Author", first_user: (current_user.username if current_user), current_user: true, project_id: (@project.id if @project), selected: params[:author], field_name: "author_id", default_label: "Author" } })
 
         .filter-item.inline
           - if params[:assignee_id].present?
