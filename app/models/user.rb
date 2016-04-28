@@ -374,7 +374,6 @@ class User < ActiveRecord::Base
   end
 
   def check_confirmation_email
-    byebug
     skip_confirmation! unless current_application_settings.send_user_confirmation_email
   end
 
