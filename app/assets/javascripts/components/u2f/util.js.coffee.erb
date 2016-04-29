@@ -1,0 +1,13 @@
+class @U2FUtil
+  @isU2FSupported: ->
+    if @testMode
+      true
+    else
+      bowser.chrome && bowser.version >= 41
+
+  @enableTestMode: ->
+    @testMode = true
+
+<% if Rails.env.test? %>
+U2FUtil.enableTestMode();
+<% end %>

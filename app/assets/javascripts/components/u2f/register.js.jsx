@@ -41,7 +41,7 @@ var U2FRegister = React.createClass({
       return (
         <div className="row append-bottom-10">
           <div className="col-md-3">
-            <a className="btn btn-info" onClick={this.inProgress}>Setup New U2F Device</a>
+            <a className="btn btn-info" id="setupU2FDevice" onClick={this.inProgress}>Setup New U2F Device</a>
           </div>
           <div className="col-md-9">
             <p>Your U2F device needs to be set up. Plug it in (if not already) and click the button on the left.</p>
@@ -71,7 +71,7 @@ var U2FRegister = React.createClass({
           <form action="/profile/two_factor_auth/create_u2f" acceptCharset="UTF-8" method="post">
             <input type="hidden" name="authenticity_token" value={this.props.authenticity_token}  />
             <input type="hidden" name="device_response" id="device_response" className="form-control" required="required" value={this.state.deviceResponse} />
-            <input type="submit" name="commit" value="Register U2F Device" className="btn btn-success"/>
+            <input type="submit" name="commit" value="Register U2F Device" className="btn btn-success" id="registerU2FDevice" />
           </form>
         </div>
       );
