@@ -456,9 +456,7 @@ class Repository
 
   def changelog
     cache.fetch(:changelog) do
-      tree(:head).blobs.find do |file|
-        file.name =~ /\A(changelog|history|changes|news)/i
-      end
+      file_on_head(/\A(changelog|history|changes|news)/i)
     end
   end
 
@@ -466,9 +464,7 @@ class Repository
     return nil if !exists? || empty?
 
     cache.fetch(:license_blob) do
-      tree(:head).blobs.find do |file|
-        file.name =~ /\A(licen[sc]e|copying)(\..+|\z)/i
-      end
+      file_on_head(/\A(licen[sc]e|copying)(\..+|\z)/i)
     end
   end
 
@@ -477,6 +473,14 @@ class Repository
 
     cache.fetch(:license_key) do
       Licensee.license(path).try(:key)
+    end
+  end
+
+  def gitignore
+    return nil if !exists? || empty?
+
+    cache.fetch(:gitignore) do
+      file_on_head(/\A\.gitignore\z/)
     end
   end
 
@@ -958,5 +962,9 @@ class Repository
 
   def cache
     @cache ||= RepositoryCache.new(path_with_namespace)
+  end
+
+  def file_on_head(regex)
+    tree(:head).blobs.find { |file| file.name =~ regex }
   end
 end
