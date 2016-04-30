@@ -35,7 +35,7 @@ module AuthenticatesWithTwoFactor
       session[:challenges] = @challenges
 
       # This is only used for the acceptance test covering this feature
-      gon.push({u2f: {challenges: @challenges, app_id: @app_id}})
+      gon.push(u2f: { challenges: @challenges, app_id: @app_id })
     end
 
 
