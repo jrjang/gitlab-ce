@@ -37,7 +37,7 @@ var U2FAuthenticate = React.createClass({
       return (
         <div>
           <p>Insert your security key (if you haven't already), and press the button below.</p>
-          <a className="btn btn-info" onClick={this.inProgress}>Login Via U2F Device</a>
+          <a className="btn btn-info" id="loginU2FDevice" onClick={this.inProgress}>Login Via U2F Device</a>
         </div>
       );
     }
@@ -63,7 +63,7 @@ var U2FAuthenticate = React.createClass({
           <form id="authenticate_u2f" action="/users/sign_in" acceptCharset="UTF-8" method="post">
             <input type="hidden" name="authenticity_token" value={this.props.authenticity_token}  />
             <input type="hidden" name="user[device_response]" id="device_response" className="form-control" required="required" value={this.state.deviceResponse} />
-            <input type="submit" name="commit" value="Authenticate via U2F Device" className="btn btn-success" />
+            <input type="submit" name="commit" value="Authenticate via U2F Device" className="btn btn-success" id="authenticateU2FDevice"/>
           </form>
         </div>
       );

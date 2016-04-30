@@ -26,13 +26,16 @@ module AuthenticatesWithTwoFactor
     session[:otp_user_id] = user.id
 
     @key_handles = user.u2f_registrations.pluck(:key_handle)
-    u2f = U2F::U2F.new('https://localhost:3443')
+    @app_id = request.base_url
+    u2f = U2F::U2F.new(@app_id)
 
     if @key_handles.present?
       @sign_requests = u2f.authentication_requests(@key_handles)
       @challenges = @sign_requests.map(&:challenge)
-      @app_id = "https://localhost:3443"
       session[:challenges] = @challenges
+
+      # This is only used for the acceptance test covering this feature
+      gon.push({u2f: {challenges: @challenges, app_id: @app_id}})
     end
 
 

@@ -102,7 +102,8 @@ class SessionsController < Devise::SessionsController
         render :two_factor and return
       end
     elsif user_params[:device_response].present? && session[:otp_user_id]
-      if U2fRegistration.authenticate(user, user_params[:device_response], session[:challenges])
+      app_id = request.base_url
+      if U2fRegistration.authenticate(user, app_id, user_params[:device_response], session[:challenges])
 
         # Remove any lingering user data from login
         session.delete(:otp_user_id)
