@@ -41,4 +41,6 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = (ENV['BOOTSTRAP'] != '1')
 
   config.eager_load = false
+
+  config.react.addons = true
 end

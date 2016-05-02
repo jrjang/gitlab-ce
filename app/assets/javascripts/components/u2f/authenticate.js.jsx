@@ -62,7 +62,7 @@ var U2FAuthenticate = React.createClass({
           <p>We heard back from your U2F device. Click this button to authenticate with the GitLab server.</p>
           <form id="authenticate_u2f" action="/users/sign_in" acceptCharset="UTF-8" method="post">
             <input type="hidden" name="authenticity_token" value={this.props.authenticity_token}  />
-            <input type="hidden" name="user[device_response]" id="device_response" className="form-control" required="required" value={this.state.deviceResponse} />
+            <input type="hidden" name="user[device_response]" id="device_response" className="device_response form-control" required="required" value={this.state.deviceResponse} />
             <input type="submit" name="commit" value="Authenticate via U2F Device" className="btn btn-success" id="authenticateU2FDevice"/>
           </form>
         </div>

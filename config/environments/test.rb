@@ -35,4 +35,6 @@ Rails.application.configure do
   config.cache_store = :null_store
 
   config.active_job.queue_adapter = :test
+
+  config.react.addons = true
 end

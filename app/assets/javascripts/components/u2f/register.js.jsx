@@ -70,7 +70,7 @@ var U2FRegister = React.createClass({
           <p>Your device was successfully set up! Click this button to register with the GitLab server.</p>
           <form action="/profile/two_factor_auth/create_u2f" acceptCharset="UTF-8" method="post">
             <input type="hidden" name="authenticity_token" value={this.props.authenticity_token}  />
-            <input type="hidden" name="device_response" id="device_response" className="form-control" required="required" value={this.state.deviceResponse} />
+            <input type="hidden" name="device_response" id="device_response" className="device_response form-control" required="required" value={this.state.deviceResponse} />
             <input type="submit" name="commit" value="Register U2F Device" className="btn btn-success" id="registerU2FDevice" />
           </form>
         </div>
