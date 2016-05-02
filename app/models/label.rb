@@ -44,6 +44,7 @@ class Label < ActiveRecord::Base
   default_scope { order(title: :asc) }
 
   scope :templates, ->  { where(template: true) }
+  scope :prioritized, ->(value = true) { where(priority: value) }
 
   alias_attribute :name, :title
 
