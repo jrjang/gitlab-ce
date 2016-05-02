@@ -702,6 +702,7 @@ Rails.application.routes.draw do
 
           member do
             post :toggle_subscription
+            post :toggle_priority
           end
         end
 
