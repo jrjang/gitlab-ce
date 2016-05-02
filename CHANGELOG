@@ -17,6 +17,7 @@ v 8.8.0 (unreleased)
   - Add 'l' shortcut to open Label dropdown on issuables and 'i' to create new issue on a project
   - Updated search UI
   - Display informative message when new milestone is created
+  - Add support for using Yubikeys (U2F) for two-factor authentication
   - Allow "NEWS" and "CHANGES" as alternative names for CHANGELOG. !3768 (Connor Shea)
   - Added button to toggle whitespaces changes on diff view
   - Backport GitHub Enterprise import support from EE
