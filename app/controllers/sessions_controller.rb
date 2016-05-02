@@ -88,38 +88,6 @@ class SessionsController < Devise::SessionsController
     find_user.try(:two_factor_enabled?)
   end
 
-  def authenticate_with_two_factor
-    user = self.resource = find_user
-
-    if user_params[:otp_attempt].present? && session[:otp_user_id]
-      if valid_otp_attempt?(user)
-        # Remove any lingering user data from login
-        session.delete(:otp_user_id)
-
-        sign_in(user) and return
-      else
-        flash.now[:alert] = 'Invalid two-factor code.'
-        render :two_factor and return
-      end
-    elsif user_params[:device_response].present? && session[:otp_user_id]
-      if U2fRegistration.authenticate(user, u2f_app_id, user_params[:device_response], session[:challenges])
-
-        # Remove any lingering user data from login
-        session.delete(:otp_user_id)
-        session.delete(:challenges)
-
-        sign_in(user) and return
-      else
-        flash.now[:alert] = 'Authentication via U2F device failed.'
-        prompt_for_two_factor(user)
-      end
-    else
-      if user && user.valid_password?(user_params[:password])
-        prompt_for_two_factor(user)
-      end
-    end
-  end
-
   def auto_sign_in_with_provider
     provider = Gitlab.config.omniauth.auto_sign_in_with_provider
     return unless provider.present?

@@ -24,7 +24,52 @@ module AuthenticatesWithTwoFactor
   # Returns nil
   def prompt_for_two_factor(user)
     session[:otp_user_id] = user.id
+    setup_u2f_authentication(user)
+    render 'devise/sessions/two_factor' and return
+  end
 
+  def authenticate_with_two_factor
+    user = self.resource = find_user
+
+    if user_params[:otp_attempt].present? && session[:otp_user_id]
+      authenticate_with_two_factor_via_otp(user)
+    elsif user_params[:device_response].present? && session[:otp_user_id]
+      authenticate_with_two_factor_via_u2f(user)
+    else
+      if user && user.valid_password?(user_params[:password])
+        prompt_for_two_factor(user)
+      end
+    end
+  end
+
+  private
+
+  def authenticate_with_two_factor_via_otp(user)
+    if valid_otp_attempt?(user)
+      # Remove any lingering user data from login
+      session.delete(:otp_user_id)
+
+      sign_in(user) and return
+    else
+      flash.now[:alert] = 'Invalid two-factor code.'
+      render :two_factor and return
+    end
+  end
+
+  def authenticate_with_two_factor_via_u2f(user)
+    if U2fRegistration.authenticate(user, u2f_app_id, user_params[:device_response], session[:challenges])
+      # Remove any lingering user data from login
+      session.delete(:otp_user_id)
+      session.delete(:challenges)
+
+      sign_in(user) and return
+    else
+      flash.now[:alert] = 'Authentication via U2F device failed.'
+      prompt_for_two_factor(user)
+    end
+  end
+
+  def setup_u2f_authentication(user)
     @key_handles = user.u2f_registrations.pluck(:key_handle)
     @app_id = u2f_app_id
     u2f = U2F::U2F.new(@app_id)
@@ -37,8 +82,5 @@ module AuthenticatesWithTwoFactor
       # This is only used for the acceptance test covering this feature
       gon.push(u2f: { challenges: @challenges, app_id: @app_id })
     end
-
-
-    render 'devise/sessions/two_factor' and return
   end
 end
