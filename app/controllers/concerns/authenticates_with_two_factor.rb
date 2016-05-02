@@ -26,7 +26,7 @@ module AuthenticatesWithTwoFactor
     session[:otp_user_id] = user.id
 
     @key_handles = user.u2f_registrations.pluck(:key_handle)
-    @app_id = request.base_url
+    @app_id = u2f_app_id
     u2f = U2F::U2F.new(@app_id)
 
     if @key_handles.present?

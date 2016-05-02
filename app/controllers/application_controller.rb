@@ -355,6 +355,11 @@ class ApplicationController < ActionController::Base
     current_user.nil? && root_path == request.path
   end
 
+  # https://developers.yubico.com/U2F/App_ID.html
+  def u2f_app_id
+    request.base_url
+  end
+
   private
 
   def set_default_sort

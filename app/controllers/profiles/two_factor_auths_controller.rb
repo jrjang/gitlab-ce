@@ -42,7 +42,7 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
   end
 
   def create_u2f
-    u2f = U2F::U2F.new(request.base_url)
+    u2f = U2F::U2F.new(u2f_app_id)
     response = U2F::RegisterResponse.load_from_json(params[:device_response])
     reg = u2f.register!(session[:challenges], response)
     current_user.u2f_registrations.create!(certificate: reg.certificate, key_handle: reg.key_handle,
@@ -89,9 +89,9 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
   end
 
   def setup_u2f_registration
-    u2f = U2F::U2F.new(request.base_url)
+    @app_id = u2f_app_id
+    u2f = U2F::U2F.new(@app_id)
     @registrations = current_user.u2f_registrations
-    @app_id = request.base_url
     @registration_requests = u2f.registration_requests
     @sign_requests = u2f.authentication_requests(@registrations.map(&:key_handle))
     session[:challenges] = @registration_requests.map(&:challenge)
