@@ -33,6 +33,7 @@ class Label < ActiveRecord::Base
 
   validates :color, color: true, allow_blank: false
   validates :project, presence: true, unless: Proc.new { |service| service.template? }
+  validates :priority, presence: false, default: false
 
   # Don't allow '?', '&', and ',' for label titles
   validates :title,
