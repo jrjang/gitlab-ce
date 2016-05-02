@@ -44,9 +44,9 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
   def create_u2f
     u2f = U2F::U2F.new(u2f_app_id)
     response = U2F::RegisterResponse.load_from_json(params[:device_response])
-    reg = u2f.register!(session[:challenges], response)
-    current_user.u2f_registrations.create!(certificate: reg.certificate, key_handle: reg.key_handle,
-                                           public_key: reg.public_key, counter: reg.counter)
+    registration = u2f.register!(session[:challenges], response)
+    current_user.u2f_registrations.create!(certificate: registration.certificate, key_handle: registration.key_handle,
+                                           public_key: registration.public_key, counter: registration.counter)
     session.delete(:challenges)
     redirect_to profile_account_path, notice: "Your U2F device was registered!"
   rescue StandardError => e
