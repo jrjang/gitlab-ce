@@ -11,13 +11,24 @@
         New label
 
 .labels
-  - if @labels.present?
-    %ul.content-list.manage-labels-list
-      = render @labels
-    = paginate @labels, theme: 'gitlab'
-  - else
-    .nothing-here-block
-      - if can? current_user, :admin_label, @project
-        Create first label or #{link_to 'generate', generate_namespace_project_labels_path(@project.namespace, @project), method: :post} default set of labels
+  .prioritized-labels
+    %h5 Prioritized Label
+    %ul.content-list.manage-labels-list.js-prioritized-labels
+      - if @prioritized.present?
+        = render @prioritized
       - else
-        No labels created
+        %p No prioritized labels yet
+
+  .other-labels
+    %h5 Other Labels
+    - if @labels.present?
+
+      %ul.content-list.manage-labels-list.js-other-labels
+        = render @labels
+      = paginate @labels, theme: 'gitlab'
+    - else
+      .nothing-here-block
+        - if can? current_user, :admin_label, @project
+          Create first label or #{link_to 'generate', generate_namespace_project_labels_path(@project.namespace, @project), method: :post} default set of labels
+        - else
+          No labels created
