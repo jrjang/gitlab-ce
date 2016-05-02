@@ -71,6 +71,19 @@ class Projects::LabelsController < Projects::ApplicationController
     end
   end
 
+  def toggle_priority
+    priority = label.priority
+
+    respond_to do |format|
+      if label.update_attributes(priority: !priority)
+        format.json { render json: label }
+      else
+        message = label.errors.full_messages.uniq.join('. ')
+        format.json { render json: { message: message }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   protected
 
   def module_enabled
