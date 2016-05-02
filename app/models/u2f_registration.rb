@@ -11,8 +11,8 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
-
-# Registration information for U2F devices, like Yubikeys
+#
+# Registration information for U2F (universal 2nd factor) devices, like Yubikeys
 
 class U2fRegistration < ActiveRecord::Base
   belongs_to :user

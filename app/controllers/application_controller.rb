@@ -355,6 +355,8 @@ class ApplicationController < ActionController::Base
     current_user.nil? && root_path == request.path
   end
 
+  # U2F (universal 2nd factor) devices need a unique identifier for the application
+  # to perform authentication.
   # https://developers.yubico.com/U2F/App_ID.html
   def u2f_app_id
     request.base_url

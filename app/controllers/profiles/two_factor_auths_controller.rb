@@ -22,7 +22,6 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     end
 
     @qr_code = build_qr_code
-
     setup_u2f_registration
   end
 
@@ -41,6 +40,8 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     end
   end
 
+  # A U2F (universal 2nd factor) device's information is stored after successful registration.
+  # This is used while 2FA authentication is taking place
   def create_u2f
     u2f = U2F::U2F.new(u2f_app_id)
     response = U2F::RegisterResponse.load_from_json(params[:device_response])
@@ -88,6 +89,8 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     Gitlab.config.gitlab.host
   end
 
+  # Setup in preparation of communication with a U2F (universal 2nd factor) device
+  # Actual communication is performed using a Javascript API
   def setup_u2f_registration
     @app_id = u2f_app_id
     u2f = U2F::U2F.new(@app_id)

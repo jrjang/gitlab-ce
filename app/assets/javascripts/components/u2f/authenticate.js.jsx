@@ -1,3 +1,5 @@
+// Authenticate users using U2F (universal 2nd factor) devices.
+//
 // State Flow #1: setup -> in_progress -> authentication -> POST to server
 // State Flow #2: setup -> in_progress -> error -> setup
 

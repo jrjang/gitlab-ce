@@ -56,6 +56,7 @@ module AuthenticatesWithTwoFactor
     end
   end
 
+  # Authenticate using the response from a U2F (universal 2nd factor) device
   def authenticate_with_two_factor_via_u2f(user)
     if U2fRegistration.authenticate(user, u2f_app_id, user_params[:device_response], session[:challenges])
       # Remove any lingering user data from login
@@ -69,6 +70,8 @@ module AuthenticatesWithTwoFactor
     end
   end
 
+  # Setup in preparation of communication with a U2F (universal 2nd factor) device
+  # Actual communication is performed using a Javascript API
   def setup_u2f_authentication(user)
     @key_handles = user.u2f_registrations.pluck(:key_handle)
     @app_id = u2f_app_id
