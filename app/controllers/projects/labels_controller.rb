@@ -11,7 +11,8 @@ class Projects::LabelsController < Projects::ApplicationController
   respond_to :js, :html
 
   def index
-    @labels = @project.labels.page(params[:page])
+    @labels = @project.labels.prioritized(false).page(params[:page])
+    @prioritized = @project.labels.prioritized
 
     respond_to do |format|
       format.html
