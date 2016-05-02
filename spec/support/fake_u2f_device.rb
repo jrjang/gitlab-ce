@@ -1,11 +1,15 @@
-module U2fDeviceHelper
+class FakeU2fDevice
+  def initialize(page)
+    @page = page
+  end
+  
   def respond_to_u2f_registration
-    app_id = page.evaluate_script('gon.u2f.app_id')
-    challenges = page.evaluate_script('gon.u2f.challenges')
+    app_id = @page.evaluate_script('gon.u2f.app_id')
+    challenges = @page.evaluate_script('gon.u2f.challenges')
 
     json_response = u2f_device(app_id).register_response(challenges[0])
 
-    page.execute_script("
+    @page.execute_script("
     u2f.register = function(appId, registerRequests, signRequests, callback) {
       callback(#{json_response});
     };
@@ -13,11 +17,11 @@ module U2fDeviceHelper
   end
 
   def respond_to_u2f_authentication
-    app_id = page.evaluate_script('gon.u2f.app_id')
-    challenges = page.evaluate_script('gon.u2f.challenges')
+    app_id = @page.evaluate_script('gon.u2f.app_id')
+    challenges = @page.evaluate_script('gon.u2f.challenges')
     json_response = u2f_device(app_id).sign_response(challenges[0])
 
-    page.execute_script("
+    @page.execute_script("
     u2f.sign = function(appId, challenges, signRequests, callback) {
       callback(#{json_response});
     };

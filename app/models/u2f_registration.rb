@@ -19,7 +19,7 @@ class U2fRegistration < ActiveRecord::Base
 
   def self.authenticate(user, app_id, json_response, challenges)
     response = U2F::SignResponse.load_from_json(json_response)
-    registration = U2fRegistration.find_by_key_handle(response.key_handle)
+    registration = user.u2f_registrations.find_by_key_handle(response.key_handle)
 
     u2f = U2F::U2F.new(app_id)
 
