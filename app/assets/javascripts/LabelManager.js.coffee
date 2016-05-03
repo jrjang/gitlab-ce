@@ -7,7 +7,9 @@ class @LabelManager
       @otherLabels = $('.js-other-labels')
     } = opts
 
-    @prioritizedLabels.sortable()
+    @prioritizedLabels.sortable(
+      items: 'li'
+    )
 
     @bindEvents()
 
@@ -22,22 +24,34 @@ class @LabelManager
     action = if $btn.parents('.js-prioritized-labels').length then 'remove' else 'add'
     _this.toggleLabelPriority($label, action)
 
-  toggleLabelPriority: ($label, action) ->
+  toggleLabelPriority: ($label, action, pasive = false) ->
     _this = @
     url = $label.find('.js-toggle-priority').data 'url'
 
+    $target = @prioritizedLabels
+    $from = @otherLabels
+
     # Optimistic update
-    $target = if action is 'remove' then @otherLabels else @prioritizedLabels
+    if action is 'remove'
+      $target = @otherLabels
+      $from = @prioritizedLabels
+
+    if $from.find('li').length is 1
+      $from.find('.empty-message').show()
+
+    if not $target.find('li').length
+      $target.find('.empty-message').hide()
+
     $label.detach().appendTo($target)
+
+    # Return if we are not persisting state
+    return if pasive
 
     xhr = $.post url
 
     # If request fails, put label back to Other labels group
     xhr.fail ->
-      $label.detach().appendTo(_this.otherLabels)
+      _this.toggleLabelPriority($label, 'remove', true)
 
       # Show a message
-      new Flash('Unable to prioritize this label at this time' , 'alert')
-
-  removeLabelFromPriority: ($label) ->
-    $label.detach().appendTo(@otherLabels)
+      new Flash('Unable to update label prioritization at this time' , 'alert')
