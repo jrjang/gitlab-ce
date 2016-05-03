@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'U2F Devices', feature: true, js: true do
+feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: true, js: true do
   def register_u2f_device(u2f_device = nil)
     u2f_device ||= FakeU2fDevice.new(page)
     u2f_device.respond_to_u2f_registration
