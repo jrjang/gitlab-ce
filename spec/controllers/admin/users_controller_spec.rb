@@ -114,6 +114,65 @@ describe Admin::UsersController do
     end
   end
 
+  describe 'POST update' do
+    before { post :update, id: user.to_param, user: params }
+
+    context 'when the password has changed' do
+      let(:params) { { password: password, password_confirmation: password_confirmation } }
+      let(:password_confirmation) { password }
+
+      context 'when the new password is valid' do
+        let(:password) { 'AValidPassword1' }
+
+        it 'redirects to the user' do
+          expect(response.status).to eq(302)
+          expect(response.headers['Location']).to end_with(user.to_param)
+        end
+
+        it 'updates the password' do
+          expect { user.reload }.to change { user.encrypted_password }
+        end
+
+        it 'sets the new password to expire immediately' do
+          expect { user.reload }.to change { user.password_expires_at }.to(a_value <= Time.now)
+        end
+      end
+
+      context 'when the new password is invalid' do
+        let(:password) { 'invalid' }
+
+        it 'shows the edit page again' do
+          expect(response).to render_template(:edit)
+        end
+
+        it 'returns the error message' do
+          expect(controller.send(:user).errors).to contain_exactly(a_string_matching(/too short/))
+        end
+
+        it 'does not update the password' do
+          expect { user.reload }.not_to change { user.encrypted_password }
+        end
+      end
+
+      context 'when the new password does not match the password confirmation' do
+        let(:password) { 'AValidPassword1' }
+        let(:password_confirmation) { 'AValidPassword2' }
+
+        it 'shows the edit page again' do
+          expect(response).to render_template(:edit)
+        end
+
+        it 'returns the error message' do
+          expect(controller.send(:user).errors).to contain_exactly(a_string_matching(/doesn't match/))
+        end
+
+        it 'does not update the password' do
+          expect { user.reload }.not_to change { user.encrypted_password }
+        end
+      end
+    end
+  end
+
   describe "POST impersonate" do
     context "when the user is blocked" do
       before do
