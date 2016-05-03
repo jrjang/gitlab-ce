@@ -27,8 +27,6 @@ class U2fRegistration < ActiveRecord::Base
       u2f.authenticate!(challenges, response,  Base64.decode64(registration.public_key), registration.counter)
       registration.update(counter: response.counter)
       true
-    else
-      false
     end
   rescue U2F::Error
     false
