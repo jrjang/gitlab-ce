@@ -15,6 +15,7 @@
 #  revision     :string(255)
 #  platform     :string(255)
 #  architecture :string(255)
+#  run_untagged :boolean          default(TRUE)
 #
 
 module Ci
