@@ -18,6 +18,7 @@ class Dispatcher
       when 'projects:issues:index'
         Issues.init()
         Issuable.init()
+        new IssuableBulkActions()
         shortcut_handler = new ShortcutsNavigation()
       when 'projects:issues:show'
         new Issue()
