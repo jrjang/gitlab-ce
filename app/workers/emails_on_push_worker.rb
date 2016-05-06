@@ -41,11 +41,15 @@ class EmailsOnPushWorker
       end
     end
 
-    recipients.split(" ").each do |recipient|
+    email = nil
+    skip_premailer = false
+
+    recipients.split.each do |recipient|
       begin
-        Notify.repository_push_email(
+        # Generating the body of this email can be expensive, so only do it once
+        skip_premailer = !email.nil?
+        email ||= Notify.repository_push_email(
           project_id,
-          recipient,
           author_id:                  author_id,
           ref:                        ref,
           action:                     action,
@@ -53,7 +57,12 @@ class EmailsOnPushWorker
           reverse_compare:            reverse_compare,
           send_from_committer_email:  send_from_committer_email,
           disable_diffs:              disable_diffs
-        ).deliver_now
+        )
+
+        email.to = recipient
+        email.add_message_id
+        email.header[:skip_premailer] = true if skip_premailer
+        email.deliver_now
       # These are input errors and won't be corrected even if Sidekiq retries
       rescue Net::SMTPFatalError, Net::SMTPSyntaxError => e
         logger.info("Failed to send e-mail for project '#{project.name_with_namespace}' to #{recipient}: #{e}")
