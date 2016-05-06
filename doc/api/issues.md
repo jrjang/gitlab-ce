@@ -360,6 +360,9 @@ target project is not found, error `404` is returned. If the target project
 equals the source project or the user has insufficient permissions to move an
 issue, error `400` together with an explaining error message is returned.
 
+If given label and/or milestone with the same name exists also in a target
+project it will be assigned to a issue that is being moved.
+
 ```
 POST /projects/:id/issues/:issue_id/move
 ```
