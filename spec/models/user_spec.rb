@@ -188,19 +188,25 @@ describe User, models: true do
       it "returns users with 2fa enabled via OTP" do
         user_with_2fa = create(:user, :two_factor_via_otp)
         user_without_2fa = create(:user)
-        expect(User.with_two_factor.pluck(:id)).to eq([user_with_2fa.id])
+        users_with_two_factor = User.with_two_factor.pluck(:id)
+        expect(users_with_two_factor).to include(user_with_2fa.id)
+        expect(users_with_two_factor).to_not include(user_without_2fa.id)
       end
 
       it "returns users with 2fa enabled via U2F" do
         user_with_2fa = create(:user, :two_factor_via_u2f)
         user_without_2fa = create(:user)
-        expect(User.with_two_factor.pluck(:id)).to eq([user_with_2fa.id])
+        users_with_two_factor = User.with_two_factor.pluck(:id)
+        expect(users_with_two_factor).to include(user_with_2fa.id)
+        expect(users_with_two_factor).to_not include(user_without_2fa.id)
       end
 
       it "returns users with 2fa enabled via OTP and U2F" do
         user_with_2fa = create(:user, :two_factor_via_otp, :two_factor_via_u2f)
         user_without_2fa = create(:user)
-        expect(User.with_two_factor.pluck(:id)).to eq([user_with_2fa.id])
+        users_with_two_factor = User.with_two_factor.pluck(:id)
+        expect(users_with_two_factor).to include(user_with_2fa.id)
+        expect(users_with_two_factor).to_not include(user_without_2fa.id)
       end
     end
 
@@ -208,19 +214,25 @@ describe User, models: true do
       it "excludes users with 2fa enabled via OTP" do
         user_with_2fa = create(:user, :two_factor_via_otp)
         user_without_2fa = create(:user)
-        expect(User.without_two_factor.pluck(:id)).to eq([user_without_2fa.id])
+        users_without_two_factor = User.without_two_factor.pluck(:id)
+        expect(users_without_two_factor).to include(user_without_2fa.id)
+        expect(users_without_two_factor).to_not include(user_with_2fa.id)
       end
 
       it "excludes users with 2fa enabled via U2F" do
         user_with_2fa = create(:user, :two_factor_via_u2f)
         user_without_2fa = create(:user)
-        expect(User.without_two_factor.pluck(:id)).to eq([user_without_2fa.id])
+        users_without_two_factor = User.without_two_factor.pluck(:id)
+        expect(users_without_two_factor).to include(user_without_2fa.id)
+        expect(users_without_two_factor).to_not include(user_with_2fa.id)
       end
 
       it "excludes users with 2fa enabled via OTP and U2F" do
         user_with_2fa = create(:user, :two_factor_via_otp, :two_factor_via_u2f)
         user_without_2fa = create(:user)
-        expect(User.without_two_factor.pluck(:id)).to eq([user_without_2fa.id])
+        users_without_two_factor = User.without_two_factor.pluck(:id)
+        expect(users_without_two_factor).to include(user_without_2fa.id)
+        expect(users_without_two_factor).to_not include(user_with_2fa.id)
       end
     end
   end

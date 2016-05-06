@@ -917,8 +917,6 @@ Lint/UselessAccessModifier:
 # Checks for useless assignment to a local variable.
 Lint/UselessAssignment:
   Enabled: true
-  Exclude:
-    - 'spec/models/user_spec.rb'
 
 # Checks for comparison of something with itself.
 Lint/UselessComparison:
