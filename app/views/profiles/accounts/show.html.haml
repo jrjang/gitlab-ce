@@ -38,7 +38,7 @@
     - if current_user.two_factor_enabled?
       = link_to 'Manage Two-Factor Authentication', profile_two_factor_auth_path, class: 'btn btn-info'
       = link_to 'Disable', profile_two_factor_auth_path, method: :delete,
-                class: 'btn btn-danger', data: {confirm: t('views.accounts.show.disable_two_factor_confirm')}
+                class: 'btn btn-danger', data: { confirm: "Are you sure? This will invalidate your registered applications and U2F devices." }
     - else
       .append-bottom-10
         = link_to 'Enable Two-Factor Authentication', profile_two_factor_auth_path, class: 'btn btn-success'
