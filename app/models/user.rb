@@ -232,14 +232,15 @@ class User < ActiveRecord::Base
   scope :active, -> { with_state(:active) }
   scope :not_in_project, ->(project) { project.users.present? ? where("id not in (:ids)", ids: project.users.map(&:id) ) : all }
   scope :without_projects, -> { where('id NOT IN (SELECT DISTINCT(user_id) FROM members)') }
-  scope :with_two_factor, (lambda do
+
+  def self.with_two_factor
     joins("LEFT OUTER JOIN u2f_registrations AS u2f ON u2f.user_id = users.id").
       where("u2f.id IS NOT NULL OR otp_required_for_login = true").group("users.id")
-  end)
-  scope :without_two_factor, (lambda do
-    joins("LEFT OUTER JOIN u2f_registrations AS u2f ON u2f.user_id = users.id").
-      where("u2f.id IS NULL AND otp_required_for_login = false")
-  end)
+  end
+
+  def self.without_two_factor
+    joins("LEFT OUTER JOIN u2f_registrations AS u2f ON u2f.user_id = users.id").where("u2f.id IS NULL AND otp_required_for_login = false")
+  end
 
   #
   # Class methods

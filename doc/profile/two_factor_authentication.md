@@ -12,10 +12,12 @@ is to know your username and password *and* have access to your phone.
 When you enable 2FA, don't forget to back up your recovery codes. For your safety, if you
 lose your codes for GitLab.com, we can't disable or recover them.  
 
-In addition to a phone application, GitLab supports U2F (universal 2nd factor )devices as 
+In addition to a phone application, GitLab supports U2F (universal 2nd factor) devices as
 the second factor of authentication. Once enabled, in addition to supplying your username and
 password to login, you'll be prompted to activate your U2F device (usually by pressing
 a button on it), and it will perform secure authentication on your behalf.
+
+> **Note:** Support for U2F devices was added in version 8.8
 
 The U2F workflow is only supported by Google Chrome at this point, so we _strongly_ recommend 
 that you set up both methods of two-factor authentication, so you can still access your account 
@@ -25,7 +27,7 @@ from other browsers.
 
 ## Enabling 2FA
 
-### Via Mobile Application
+### Enable 2FA via mobile application
 
 **In GitLab:**
 
@@ -54,7 +56,7 @@ If the pin you entered was correct, you'll see a message indicating that
 Two-factor Authentication has been enabled, and you'll be presented with a list
 of recovery codes.
 
-### Via U2F Device
+### Enable 2FA via U2F device
 
 **In GitLab:**
 
@@ -89,13 +91,13 @@ Logging in with 2FA enabled is only slightly different than a normal login.
 Enter your username and password credentials as you normally would, and you'll
 be presented with a second prompt, depending on which type of 2FA you've enabled.
 
-### Via Mobile Application
+### Log in via mobile application
 
 Enter the pin from your phone's application or a recovery code to log in.
 
 ![Two-factor authentication on sign in via OTP](2fa_auth.png)
 
-### Via U2F Device
+### Log in via U2F device
 
 1. Click **Login via U2F Device**
 1. A light will start blinking on your device. Activate it by pressing its button.

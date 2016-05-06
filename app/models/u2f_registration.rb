@@ -24,7 +24,7 @@ class U2fRegistration < ActiveRecord::Base
     u2f = U2F::U2F.new(app_id)
 
     if registration
-      u2f.authenticate!(challenges, response,  Base64.decode64(registration.public_key), registration.counter)
+      u2f.authenticate!(challenges, response, Base64.decode64(registration.public_key), registration.counter)
       registration.update(counter: response.counter)
       true
     end
