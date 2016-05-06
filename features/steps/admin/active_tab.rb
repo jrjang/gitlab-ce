@@ -34,4 +34,12 @@ class Spinach::Features::AdminActiveTab < Spinach::FeatureSteps
   step 'the active main tab should be Messages' do
     ensure_active_main_tab('Messages')
   end
+
+  step 'no other main tabs should be active' do
+    expect(page).to have_selector('.nav-sidebar > li.active', count: 1)
+  end
+
+  def ensure_active_main_tab(content)
+    expect(find('.nav-sidebar > li.active')).to have_content(content)
+  end
 end

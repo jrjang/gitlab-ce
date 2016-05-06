@@ -2,7 +2,7 @@ module SharedActiveTab
   include Spinach::DSL
 
   def ensure_active_main_tab(content)
-    expect(find('.nav-sidebar > li.active')).to have_content(content)
+    expect(find('.layout-nav li.active')).to have_content(content)
   end
 
   def ensure_active_sub_tab(content)
@@ -14,7 +14,7 @@ module SharedActiveTab
   end
 
   step 'no other main tabs should be active' do
-    expect(page).to have_selector('.nav-sidebar > li.active', count: 1)
+    expect(page).to have_selector('.layout-nav .nav-links > li.active', count: 1)
   end
 
   step 'no other sub tabs should be active' do
