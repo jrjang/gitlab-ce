@@ -86,6 +86,21 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
 
       expect(U2fRegistration.count).to eq(2)
     end
+
+    it "doesn't register the device if there are errors" do
+      visit profile_account_path
+      click_on 'Enable Two-factor authentication'
+
+      # Have the "u2f device" respond with bad data
+      page.execute_script("u2f.register = function(_,_,_,callback) { callback('bad response'); };")
+      find('#setupU2FDevice').click
+      expect(page).to have_content('Your device was successfully set up')
+      find('#registerU2FDevice').click
+
+      expect(U2fRegistration.count).to eq(0)
+      expect(page.body).to match("Couldn't register your U2F device")
+      expect(page.body).to match('JSON::ParserError')
+    end
   end
 
   describe "authentication" do
@@ -193,3 +208,4 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
     end
   end
 end
+

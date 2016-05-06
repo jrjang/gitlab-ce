@@ -43,18 +43,17 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
   # A U2F (universal 2nd factor) device's information is stored after successful registration.
   # This is used while 2FA authentication is taking place
   def create_u2f
-    u2f = U2F::U2F.new(u2f_app_id)
-    response = U2F::RegisterResponse.load_from_json(params[:device_response])
-    registration = u2f.register!(session[:challenges], response)
-    current_user.u2f_registrations.create!(certificate: registration.certificate, key_handle: registration.key_handle,
-                                           public_key: registration.public_key, counter: registration.counter)
-    session.delete(:challenges)
-    redirect_to profile_account_path, notice: "Your U2F device was registered!"
-  rescue StandardError => e
-    @u2f_error = "Unable to register: #{e.class.name}"
-    @qr_code = build_qr_code
-    setup_u2f_registration
-    render :show
+    service = U2fRegistrations::CreateService.new(current_user, u2f_params)
+    service.execute
+    if service.success?
+      session.delete(:challenges)
+      redirect_to profile_account_path, notice: "Your U2F device was registered!"
+    else
+      @u2f_error = "Unable to register: #{service.error_message}"
+      @qr_code = build_qr_code
+      setup_u2f_registration
+      render :show
+    end
   end
 
   def codes
@@ -87,6 +86,12 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
 
   def issuer_host
     Gitlab.config.gitlab.host
+  end
+
+  def u2f_params
+    {app_id: u2f_app_id,
+     device_response: params[:device_response],
+     challenges: session[:challenges]}
   end
 
   # Setup in preparation of communication with a U2F (universal 2nd factor) device
