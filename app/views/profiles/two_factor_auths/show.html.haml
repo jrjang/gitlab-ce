@@ -9,7 +9,7 @@
       Use an app on your mobile device to add the second factor of authentication.
   .col-lg-9
     - if current_user.two_factor_otp_enabled?
-      = fa_stacked_icon "check inverse", base: "circle", class: "fa text-success", text: t('views.two_factor_auths.new.already_enabled_otp')
+      = icon "check inverse", base: "circle", class: "fa text-success", text: t('views.two_factor_auths.new.already_enabled_otp')
     - else
       %p
         Download the Google Authenticator application from App Store for iOS or Google Play for Android and scan this code.
@@ -56,7 +56,7 @@
   .col-lg-9
     %p
       - if @registrations.present?
-        = fa_stacked_icon "check inverse", base: "circle", class: "fa text-success", text: "You have #{pluralize(@registrations.count, 'U2F device')} registered with GitLab."
+        = icon "check inverse", base: "circle", class: "fa text-success", text: "You have #{pluralize(@registrations.count, 'U2F device')} registered with GitLab."
     - if @u2f_error
       .alert.alert-danger
         = @u2f_error
