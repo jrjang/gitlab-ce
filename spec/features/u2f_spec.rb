@@ -20,6 +20,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
         click_on 'Enable Two-Factor Authentication'
 
         register_u2f_device
+
         expect(page.body).to match('Your U2F device was registered')
       end
 
@@ -48,7 +49,9 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
         visit profile_account_path
         click_on 'Manage Two-Factor Authentication'
         expect(page.body).to match("You've already enabled two-factor authentication using mobile")
+
         register_u2f_device
+
         expect(page.body).to match('Your U2F device was registered')
       end
 
@@ -124,6 +127,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
         find("#loginU2FDevice").click
         expect(page.body).to match('We heard back from your U2F device')
         find("#authenticateU2FDevice").click
+
         expect(page.body).to match('Signed in successfully')
       end
     end
@@ -137,6 +141,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
         find("#loginU2FDevice").click
         expect(page.body).to match('We heard back from your U2F device')
         find("#authenticateU2FDevice").click
+
         expect(page.body).to match('Signed in successfully')
       end
     end
@@ -157,6 +162,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
           find("#loginU2FDevice").click
           expect(page.body).to match('We heard back from your U2F device')
           find("#authenticateU2FDevice").click
+
           expect(page.body).to match('Authentication via U2F device failed')
         end
       end
@@ -176,6 +182,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
           find("#loginU2FDevice").click
           expect(page.body).to match('We heard back from your U2F device')
           find("#authenticateU2FDevice").click
+
           expect(page.body).to match('Signed in successfully')
         end
       end
@@ -189,6 +196,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
         find("#loginU2FDevice").click
         expect(page.body).to match('We heard back from your U2F device')
         find("#authenticateU2FDevice").click
+
         expect(page.body).to match('Authentication via U2F device failed')
       end
     end
