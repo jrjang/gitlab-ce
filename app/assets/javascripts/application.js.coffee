@@ -297,5 +297,8 @@ $ ->
     .on "resize", (e) ->
       fitSidebarForSize()
 
+  # Use mustache-style delimiters for underscore.js templating
+  _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g }
+
   checkInitialSidebarSize()
   new Aside()

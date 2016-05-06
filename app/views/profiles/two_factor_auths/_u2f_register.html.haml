@@ -1,0 +1,37 @@
+%div#registerU2F
+
+%div#registerU2F_templates
+
+  %script#registerU2F_notSupported{type: "text/template"}
+    %p Your browser doesn't support U2F. Please use Google Chrome (version 41 or newer).
+
+  %script#registerU2F_setup{type: "text/template"}
+    .row.append-bottom-10
+      .col-md-3
+        %a#setupU2FDevice.btn.btn-info Setup New U2F Device
+      .col-md-9
+        %p Your U2F device needs to be set up. Plug it in (if not already) and click the button on the left.
+
+
+  %script#registerU2F_inProgress{type: "text/template"}
+    %p Trying to communicate with your device. Plug it in (if you haven't already) and press the button on the device now.
+
+  %script#registerU2F_error{type: "text/template"}
+    %div
+      %p
+        %span {{ error_message }}
+      %a.btn.btn-warning#U2FTryAgain Try again?
+
+  %script#registerU2F_registered{type: "text/template"}
+    %div.row.append-bottom-10
+      %p Your device was successfully set up! Click this button to register with the GitLab server.
+      %form{:acceptCharset => "UTF-8", :action => "/profile/two_factor_auth/create_u2f", :method => "post"}
+        %div{:className => "row append-bottom-10"}
+        %input{:name => "authenticity_token", :type => "hidden", :value => "{{ authenticity_token }}"}
+        %input#device_response.device_response.form-control{:name => "device_response", :required => "required", :type => "hidden", :value => "{{ device_response }}"}
+        %input#registerU2FDevice.btn.btn-success{:name => "commit", :type => "submit", :value => "Register U2F Device"}
+
+
+:javascript
+  var u2fRegister = new U2FRegister($("#registerU2F"), $("#registerU2F_templates"), gon.u2f, $('meta[name="csrf-token"]').attr('content'));
+  u2fRegister.start();

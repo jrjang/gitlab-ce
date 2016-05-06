@@ -60,10 +60,10 @@
     - if @u2f_error
       .alert.alert-danger
         = @u2f_error
-    = react_component('U2FRegister', appId: @app_id, registerRequests: @registration_requests,
-                      authenticity_token: form_authenticity_token, signRequests: @sign_requests)
+    = render "u2f_register"
 
 - if two_factor_skippable?
   :javascript
     var button = '<a class="btn btn-xs btn-warning pull-right" data-method="patch" href="/profile/two_factor_auth/skip">Configure it later</a>';
     $(".flash-alert").append(button);
+

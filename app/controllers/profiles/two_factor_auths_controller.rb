@@ -105,6 +105,8 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
     session[:challenges] = @registration_requests.map(&:challenge)
 
     # This is only used for the acceptance test covering this feature
-    gon.push(u2f: { challenges: session[:challenges], app_id: @app_id })
+    gon.push(u2f: { challenges: session[:challenges], app_id: @app_id,
+                    register_requests: @registration_requests,
+                    sign_requests: @sign_requests })
   end
 end
