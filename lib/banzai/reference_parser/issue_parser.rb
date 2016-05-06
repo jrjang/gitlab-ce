@@ -3,16 +3,26 @@ module Banzai
     class IssueParser < Parser
       self.reference_type = :issue
 
-      def user_can_see_reference?(user, node)
-        issue = Issue.find_by(id: node.attr('data-issue'))
+      def nodes_visible_to_user(user, nodes)
+        issues = issues_for_nodes(nodes)
+        issue_attr = 'data-issue'
 
-        Ability.abilities.allowed?(user, :read_issue, issue)
+        nodes.select do |node|
+          issue = issues[node.attr(issue_attr).to_i]
+
+          issue ? Ability.abilities.allowed?(user, :read_issue, issue) : false
+        end
       end
 
       def referenced_by(nodes)
-        ids = nodes.map { |node| node.attr('data-issue') }
+        issues_for_nodes(nodes).values
+      end
 
-        Issue.where(id: ids)
+      def issues_for_nodes(nodes)
+        @issues_for_nodes ||= {}
+
+        @issues_for_nodes[nodes] ||=
+          grouped_objects_for_nodes(nodes, Issue, 'data-issue')
       end
     end
   end
