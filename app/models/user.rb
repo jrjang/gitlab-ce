@@ -235,7 +235,7 @@ class User < ActiveRecord::Base
 
   def self.with_two_factor
     joins("LEFT OUTER JOIN u2f_registrations AS u2f ON u2f.user_id = users.id").
-      where("u2f.id IS NOT NULL OR otp_required_for_login = true").group("users.id")
+      where("u2f.id IS NOT NULL OR otp_required_for_login = true").distinct("users.id")
   end
 
   def self.without_two_factor
