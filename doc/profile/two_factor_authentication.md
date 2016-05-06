@@ -53,7 +53,7 @@ from other browsers.
 1. Click **Submit**.
 
 If the pin you entered was correct, you'll see a message indicating that
-Two-factor Authentication has been enabled, and you'll be presented with a list
+Two-Factor Authentication has been enabled, and you'll be presented with a list
 of recovery codes.
 
 ### Enable 2FA via U2F device
@@ -63,7 +63,7 @@ of recovery codes.
 1. Log in to your GitLab account.
 1. Go to your **Profile Settings**.
 1. Go to **Account**.
-1. Click **Enable Two-factor Authentication**.
+1. Click **Enable Two-Factor Authentication**.
 1. Plug in your U2F device.
 1. Click on **Setup New U2F Device**.
 1. A light will start blinking on your device. Activate it by pressing its button.
@@ -95,7 +95,7 @@ be presented with a second prompt, depending on which type of 2FA you've enabled
 
 Enter the pin from your phone's application or a recovery code to log in.
 
-![Two-factor authentication on sign in via OTP](2fa_auth.png)
+![Two-Factor Authentication on sign in via OTP](2fa_auth.png)
 
 ### Log in via U2F device
 
@@ -105,7 +105,7 @@ Enter the pin from your phone's application or a recovery code to log in.
 You will see a message indicating that your device responded to the authentication request.
 Click on **Authenticate via U2F Device** to complete the process.
 
-![Two-factor authentication on sign in via U2F device](2fa_u2f_authenticate.png)
+![Two-Factor Authentication on sign in via U2F device](2fa_u2f_authenticate.png)
 
 ## Disabling 2FA
 

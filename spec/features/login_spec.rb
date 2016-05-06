@@ -37,7 +37,7 @@ feature 'Login', feature: true do
       end
 
       def enter_code(code)
-        fill_in 'Two-factor Authentication code', with: code
+        fill_in 'Two-Factor Authentication code', with: code
         click_button 'Verify code'
       end
 
@@ -138,7 +138,7 @@ feature 'Login', feature: true do
       context 'within the grace period' do
         it 'redirects to two-factor configuration page' do
           expect(current_path).to eq profile_two_factor_auth_path
-          expect(page).to have_content('You must enable Two-factor Authentication for your account before')
+          expect(page).to have_content('You must enable Two-Factor Authentication for your account before')
         end
 
         it 'allows skipping two-factor configuration', js: true do
@@ -154,7 +154,7 @@ feature 'Login', feature: true do
 
         it 'redirects to two-factor configuration page' do
           expect(current_path).to eq profile_two_factor_auth_path
-          expect(page).to have_content('You must enable Two-factor Authentication for your account.')
+          expect(page).to have_content('You must enable Two-Factor Authentication for your account.')
         end
 
         it 'disallows skipping two-factor configuration', js: true do
@@ -172,7 +172,7 @@ feature 'Login', feature: true do
 
       it 'redirects to two-factor configuration page' do
         expect(current_path).to eq profile_two_factor_auth_path
-        expect(page).to have_content('You must enable Two-factor Authentication for your account.')
+        expect(page).to have_content('You must enable Two-Factor Authentication for your account.')
       end
     end
   end

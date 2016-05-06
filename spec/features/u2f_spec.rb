@@ -17,7 +17,8 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
     describe 'when 2FA via OTP is disabled' do
       it 'allows registering a new device' do
         visit profile_account_path
-        click_on 'Enable Two-factor authentication'
+        click_on 'Enable Two-Factor Authentication'
+
         register_u2f_device
         expect(page.body).to match('Your U2F device was registered')
       end
@@ -26,16 +27,16 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
         visit profile_account_path
 
         # First device
-        click_on 'Enable Two-factor authentication'
+        click_on 'Enable Two-Factor Authentication'
         register_u2f_device
         expect(page.body).to match('Your U2F device was registered')
 
         # Second device
-        click_on 'Manage Two-factor Authentication'
+        click_on 'Manage Two-Factor Authentication'
         register_u2f_device
         expect(page.body).to match('Your U2F device was registered')
 
-        click_on 'Manage Two-factor Authentication'
+        click_on 'Manage Two-Factor Authentication'
         expect(page.body).to match('You have 2 U2F devices registered')
       end
     end
@@ -45,7 +46,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
 
       it 'allows registering a new device' do
         visit profile_account_path
-        click_on 'Manage Two-factor Authentication'
+        click_on 'Manage Two-Factor Authentication'
         expect(page.body).to match("You've already enabled two-factor authentication using mobile")
         register_u2f_device
         expect(page.body).to match('Your U2F device was registered')
@@ -55,16 +56,16 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
         visit profile_account_path
 
         # First device
-        click_on 'Manage Two-factor Authentication'
+        click_on 'Manage Two-Factor Authentication'
         register_u2f_device
         expect(page.body).to match('Your U2F device was registered')
 
         # Second device
-        click_on 'Manage Two-factor Authentication'
+        click_on 'Manage Two-Factor Authentication'
         register_u2f_device
         expect(page.body).to match('Your U2F device was registered')
 
-        click_on 'Manage Two-factor Authentication'
+        click_on 'Manage Two-Factor Authentication'
         expect(page.body).to match('You have 2 U2F devices registered')
       end
     end
@@ -72,7 +73,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
     it 'allows the same device to be registered for multiple users' do
       # First user
       visit profile_account_path
-      click_on 'Enable Two-factor authentication'
+      click_on 'Enable Two-Factor Authentication'
       u2f_device = register_u2f_device
       expect(page.body).to match('Your U2F device was registered')
       logout
@@ -80,7 +81,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
       # Second user
       login_as(:user)
       visit profile_account_path
-      click_on 'Enable Two-factor authentication'
+      click_on 'Enable Two-Factor Authentication'
       register_u2f_device(u2f_device)
       expect(page.body).to match('Your U2F device was registered')
 
@@ -89,7 +90,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
 
     it "doesn't register the device if there are errors" do
       visit profile_account_path
-      click_on 'Enable Two-factor authentication'
+      click_on 'Enable Two-Factor Authentication'
 
       # Have the "u2f device" respond with bad data
       page.execute_script("u2f.register = function(_,_,_,callback) { callback('bad response'); };")
@@ -110,7 +111,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
       # Register and logout
       login_as(user)
       visit profile_account_path
-      click_on 'Enable Two-factor authentication'
+      click_on 'Enable Two-Factor Authentication'
       @u2f_device = register_u2f_device
       logout
     end
@@ -146,7 +147,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
           # Register current user with the different U2F device
           current_user = login_as(:user)
           visit profile_account_path
-          click_on 'Enable Two-factor authentication'
+          click_on 'Enable Two-Factor Authentication'
           register_u2f_device
           logout
 
@@ -165,7 +166,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
           # Register current user with the same U2F device
           current_user = login_as(:user)
           visit profile_account_path
-          click_on 'Enable Two-factor authentication'
+          click_on 'Enable Two-Factor Authentication'
           register_u2f_device(@u2f_device)
           logout
 
@@ -199,7 +200,7 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
     before do
       login_as(user)
       visit profile_account_path
-      click_on 'Enable Two-factor authentication'
+      click_on 'Enable Two-Factor Authentication'
       register_u2f_device
     end
 
