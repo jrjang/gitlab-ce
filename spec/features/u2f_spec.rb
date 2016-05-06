@@ -217,4 +217,3 @@ feature 'Using U2F (Universal 2nd Factor) Devices for Authentication', feature: 
     end
   end
 end
-

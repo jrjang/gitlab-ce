@@ -89,9 +89,9 @@ class Profiles::TwoFactorAuthsController < Profiles::ApplicationController
   end
 
   def u2f_params
-    {app_id: u2f_app_id,
-     device_response: params[:device_response],
-     challenges: session[:challenges]}
+    { app_id: u2f_app_id,
+      device_response: params[:device_response],
+      challenges: session[:challenges] }
   end
 
   # Setup in preparation of communication with a U2F (universal 2nd factor) device
